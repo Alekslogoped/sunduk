@@ -25,14 +25,13 @@ body{
   font-family:ui-rounded,"Trebuchet MS",Arial,sans-serif;
 }
 
-button{
+button,summary{
   font:inherit;
-  touch-action:manipulation;
-  cursor:pointer;
-  color:inherit;
   -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
 }
 
+button{color:inherit;cursor:pointer}
 button:disabled{cursor:default}
 
 button:focus-visible,
@@ -53,13 +52,10 @@ summary:focus-visible{
   justify-content:space-between;
   gap:18px;
   margin-bottom:16px;
+  flex-wrap:wrap;
 }
 
-.brand{
-  display:flex;
-  gap:12px;
-  align-items:center;
-}
+.brand{display:flex;gap:12px;align-items:center}
 
 .brand-icon{
   font-size:30px;
@@ -101,21 +97,18 @@ h1{
   gap:10px;
   flex-shrink:0;
   margin-left:auto;
-}
-
-/* Подсказка рядом с кнопкой перезапуска */
-
-.help{
   position:relative;
-  z-index:20;
 }
+
+/* Как играть */
+
+.help{position:static;z-index:20}
 
 .help summary{
   display:block;
   list-style:none;
   white-space:nowrap;
   cursor:pointer;
-  font-weight:bold;
 }
 
 .help summary::-webkit-details-marker{display:none}
@@ -138,16 +131,12 @@ h1{
   box-shadow:0 12px 34px #25434b26;
   color:var(--ink);
   font-size:14px;
-  font-weight:normal;
   max-height:min(65vh,460px);
   overflow:auto;
+  z-index:30;
 }
 
-.help-content p{
-  margin:0 0 10px;
-  line-height:1.55;
-}
-
+.help-content p{margin:0 0 10px;line-height:1.55}
 .help-content p:last-child{margin-bottom:0}
 
 .layout{
@@ -158,18 +147,13 @@ h1{
 
 .adventure{min-width:0}
 
-/* Остров */
+/* Фон игры */
 
 .scene{
   position:relative;
   width:100%;
-  aspect-ratio:1.9;
-  background:linear-gradient(
-    #d9f1f2 0%,
-    #edfaf4 58%,
-    #a5dbd9 58%,
-    #71c4c5 100%
-  );
+  aspect-ratio:16/9;
+  background:#b5e6ee;
   border:5px solid white;
   border-radius:28px;
   overflow:hidden;
@@ -177,120 +161,42 @@ h1{
   box-shadow:0 8px 22px #2d73700b;
 }
 
-.scene::before,
-.scene::after{
-  content:"";
+.scene-bg{
   position:absolute;
-  height:12%;
-  width:130%;
-  left:-15%;
-  border-radius:50%;
-  border-top:3px solid #ffffff61;
-  bottom:7%;
-  animation:waves 6s ease-in-out infinite;
-}
-
-.scene::after{
-  bottom:15%;
-  left:-4%;
-  animation-delay:-3s;
-}
-
-.sun{
-  position:absolute;
-  width:9%;
-  aspect-ratio:1;
-  border-radius:50%;
-  background:#ffe5a4;
-  right:10%;
-  top:9%;
-  box-shadow:0 0 0 12px #ffe7a32b;
-}
-
-.cloud{
-  position:absolute;
-  top:13%;
-  left:8%;
-  width:20%;
-  height:8%;
-  border-radius:60px;
-  background:#ffffff9c;
-}
-
-.cloud::before{
-  content:"";
-  position:absolute;
-  width:40%;
-  height:180%;
-  background:inherit;
-  bottom:0;
-  left:20%;
-  border-radius:50%;
-}
-
-.cloud.two{
-  width:13%;
-  left:48%;
-  top:21%;
-  opacity:.7;
-}
-
-.island{
-  position:absolute;
-  left:6%;
-  width:87%;
-  height:37%;
-  bottom:5%;
-  border-radius:50%;
-  background:#efd298;
-  border-bottom:12px solid #ddb982;
-  box-shadow:0 12px 0 #4eaeb62b;
-}
-
-.island::before{
-  content:"";
-  position:absolute;
-  inset:10% 7% 20%;
-  border-radius:50%;
-  border:2px dashed #d9b97d;
-  opacity:.5;
-}
-
-.palm{
-  position:absolute;
-  right:-1%;
-  top:0;
-  width:25%;
-  height:76%;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
   z-index:0;
-  transform:rotate(7deg);
+  pointer-events:none;
+  user-select:none;
 }
 
 .speech{
   position:absolute;
-  left:5%;
-  top:10%;
+  left:4%;
+  top:8%;
   width:37%;
-  background:#ffffffed;
+  background:#fffffff0;
   border:1px solid #d8e9e5;
   border-radius:18px 18px 18px 4px;
   padding:10px 12px;
   text-align:center;
-  z-index:5;
+  z-index:8;
   font-size:clamp(11px,1.45vw,16px);
   font-weight:bold;
   box-shadow:0 3px 0 #7195910e;
 }
 
-/* Кролик */
+/* Временный кролик */
 
 .rabbit{
   position:absolute;
-  width:23%;
-  height:62%;
-  bottom:15%;
-  left:12%;
-  z-index:4;
+  width:21%;
+  height:58%;
+  bottom:17%;
+  left:13%;
+  z-index:6;
   transition:left 1.2s ease-in-out,bottom 1.2s ease-in-out;
 }
 
@@ -313,132 +219,80 @@ h1{
 }
 
 .rabbit .ear.right{animation-delay:-1.3s}
-
-.rabbit .body-bob{
-  animation:bob 3s ease-in-out infinite;
-}
+.rabbit .body-bob{animation:bob 3s ease-in-out infinite}
 
 .held{
   opacity:0;
   transition:opacity .2s;
 }
 
-/* Сундук */
+/* Сундук из трёх PNG.
+   Все изображения сохраняем с прозрачными полями. */
 
 .chest{
   position:absolute;
-  width:43%;
-  height:44%;
-  left:39%;
-  bottom:19%;
-  perspective:800px;
-  z-index:3;
+  left:40%;
+  top:23%;
+  width:46%;
+  aspect-ratio:4/3;
+  perspective:1000px;
+  z-index:4;
 }
 
-.lid{
+.chest-layer{
   position:absolute;
-  inset:0 0 45%;
-  border:4px solid #6f402c;
-  border-radius:35px 35px 4px 4px;
-  background:linear-gradient(#bd7545,#9d552f);
-  transform-origin:center bottom;
-  transition:transform 1s ease-in-out;
-  z-index:5;
-  box-shadow:inset 0 6px #ffffff20;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  pointer-events:none;
+  user-select:none;
+}
+
+.chest-back{z-index:1}
+.chest-front{z-index:5}
+
+.lid{
+  z-index:4;
+  transform-origin:50% 43%;
+  transition:transform 1.1s ease-in-out;
   backface-visibility:visible;
 }
 
-.lid::before,
-.lid::after{
-  content:"";
-  position:absolute;
-  top:-3px;
-  bottom:0;
-  width:12%;
-  background:#f7cb63;
-  border:3px solid #b58334;
-}
-
-.lid::before{
-  left:12%;
-  border-radius:12px 12px 0 0;
-}
-
-.lid::after{
-  right:12%;
-  border-radius:12px 12px 0 0;
-}
-
-.lid-emblem{
-  position:absolute;
-  left:43%;
-  top:15%;
-  font-size:clamp(16px,2.5vw,29px);
-  color:#ffe1a2;
-}
-
-.chest-back{
-  position:absolute;
-  inset:35% 1% 5%;
-  border-radius:12px;
-  background:#4b2d23;
-  border:4px solid #6f402c;
-}
-
-.chest-front{
-  position:absolute;
-  inset:48% 0 0;
-  border:4px solid #6f402c;
-  border-radius:3px 3px 16px 16px;
-  background:repeating-linear-gradient(
-    0deg,
-    #9d582e 0 24px,
-    #8e4b28 25px 27px
-  );
-  z-index:6;
-  box-shadow:inset 0 -7px #63362055;
-}
-
-.chest-front::before,
-.chest-front::after{
-  content:"";
-  position:absolute;
-  top:0;
-  bottom:0;
-  width:9%;
-  background:#f0bb4f;
-  border:2px solid #aa7831;
-}
-
-.chest-front::before{left:7%}
-.chest-front::after{right:7%}
-
-.code{
-  position:absolute;
-  left:4%;
-  right:4%;
-  top:17%;
-  display:flex;
-  gap:4px;
-  background:#663e2c;
-  padding:5px;
-  border:2px solid #edc775;
-  border-radius:11px;
+.opened .lid{
+  transform:translateY(-13%) rotateX(-58deg);
   z-index:2;
 }
 
+/* Окошки на передней стенке */
+
+.code{
+  position:absolute;
+  left:17%;
+  right:17%;
+  top:59%;
+  height:23%;
+  display:flex;
+  gap:4px;
+  padding:5px;
+  background:#6d422bd9;
+  border:2px solid #edc775;
+  border-radius:11px;
+  z-index:7;
+}
+
 .slot{
+  position:relative;
   min-width:0;
-  width:20%;
-  aspect-ratio:.88;
+  flex:1;
+  height:100%;
+  padding:0;
   background:#fff8dc;
   border:2px solid #e7c995;
   border-radius:7px;
-  padding:0;
   color:#4f3b2e;
   font-weight:900;
   font-size:clamp(20px,3vw,36px);
-  position:relative;
   box-shadow:0 2px 0 #402b2040;
 }
 
@@ -462,26 +316,28 @@ h1{
 
 .slot-number{
   position:absolute;
-  bottom:-19px;
+  bottom:-18px;
   left:0;
   right:0;
-  font-size:11px;
-  color:#ffe5b6;
-  font-weight:400;
+  font-size:10px;
+  color:#fff4d3;
+  font-weight:bold;
+  text-shadow:0 1px 2px #59321e;
 }
 
-/* Подарок */
+/* Подарок находится за передней стенкой */
 
 .treasure{
   position:absolute;
   left:34%;
   width:32%;
-  top:24%;
-  height:54%;
+  top:27%;
+  height:38%;
   opacity:0;
-  z-index:4;
-  transform:translateY(10px);
+  z-index:3;
+  transform:translateY(12%);
   transition:opacity .5s,transform .8s;
+  pointer-events:none;
 }
 
 .carrot{
@@ -492,44 +348,35 @@ h1{
 
 .shine{
   position:absolute;
-  inset:-25% -20%;
+  left:14%;
+  top:12%;
+  width:72%;
+  height:58%;
   border-radius:50%;
-  background:radial-gradient(ellipse,#fff1b8dc,#fff0a000 70%);
+  background:radial-gradient(ellipse,#fff1b8e6,#fff0a000 70%);
   opacity:0;
   transition:opacity .8s;
   z-index:2;
   pointer-events:none;
 }
 
-.opened .lid{transform:rotateX(-112deg)}
-
 .opened .treasure{
   opacity:1;
-  transform:translateY(-42%);
+  transform:translateY(-35%);
 }
 
 .opened .shine{opacity:1}
-
-.approaching .rabbit{
-  left:31%;
-  bottom:17%;
-}
-
 .carrying .treasure{opacity:0}
 .carrying .held{opacity:1}
 
-.returning .rabbit{
-  left:12%;
-  bottom:15%;
-}
+.approaching .rabbit{left:31%;bottom:17%}
+.returning .rabbit{left:13%;bottom:17%}
 
 .victory .rabbit .body-bob{
   animation:celebrate .65s ease-in-out 2;
 }
 
-.scene.shake .chest{
-  animation:shake .5s;
-}
+.scene.shake .chest{animation:shake .5s}
 
 /* Конфетти */
 
@@ -537,7 +384,7 @@ h1{
   position:absolute;
   inset:0;
   pointer-events:none;
-  z-index:8;
+  z-index:9;
 }
 
 .confetti i{
@@ -552,7 +399,7 @@ h1{
   animation-delay:var(--delay);
 }
 
-/* Примеры */
+/* Пять примеров */
 
 .tasks{
   display:grid;
@@ -562,7 +409,6 @@ h1{
 }
 
 .task{
-  position:relative;
   padding:12px 2px 14px;
   border:2px solid #d8e5e1;
   background:white;
@@ -598,16 +444,8 @@ h1{
   color:var(--teal);
 }
 
-.task.wrong{
-  border-color:#ce7370;
-  background:#fff1ed;
-}
-
-.task.correct{
-  border-color:#70aa7d;
-  background:#f0faed;
-}
-
+.task.wrong{border-color:#ce7370;background:#fff1ed}
+.task.correct{border-color:#70aa7d;background:#f0faed}
 .task:disabled{opacity:1}
 
 /* Панель ввода */
@@ -621,10 +459,7 @@ h1{
   flex-direction:column;
 }
 
-.panel h2{
-  font-size:20px;
-  margin:0 0 8px;
-}
+.panel h2{font-size:20px;margin:0 0 8px}
 
 .instruction{
   font-size:14px;
@@ -649,10 +484,7 @@ h1{
   margin-bottom:5px;
 }
 
-.current strong{
-  font-size:28px;
-  letter-spacing:1px;
-}
+.current strong{font-size:28px;letter-spacing:1px}
 
 .keypad{
   display:grid;
@@ -671,12 +503,7 @@ h1{
 }
 
 .key:hover{background:#f0faf7}
-
-.key:active{
-  transform:translateY(2px);
-  box-shadow:none;
-}
-
+.key:active{transform:translateY(2px);box-shadow:none}
 .key:disabled{opacity:.45}
 .key.delete{font-size:20px}
 .key.zero{grid-column:2}
@@ -710,29 +537,7 @@ h1{
 }
 
 .status.error{color:var(--bad)}
-
-.status.success{
-  color:var(--good);
-  font-weight:bold;
-}
-
-.bottom{
-  display:flex;
-  gap:15px;
-  justify-content:flex-end;
-  align-items:start;
-  margin-top:16px;
-  font-size:12px;
-  color:var(--muted);
-}
-
-.badge{
-  white-space:nowrap;
-  font-size:11px;
-  border:1px solid #cddeda;
-  border-radius:20px;
-  padding:5px 9px;
-}
+.status.success{color:var(--good);font-weight:bold}
 
 /* Коллекция */
 
@@ -783,6 +588,32 @@ h1{
   margin-bottom:3px;
 }
 
+.bottom{
+  display:flex;
+  justify-content:flex-end;
+  margin-top:16px;
+  font-size:12px;
+  color:var(--muted);
+}
+
+.badge{
+  font-size:11px;
+  border:1px solid #cddeda;
+  border-radius:20px;
+  padding:5px 9px;
+}
+
+.asset-warning{
+  padding:12px;
+  border:1px solid #dfb3a8;
+  border-radius:12px;
+  background:#fff1e8;
+  color:#8c392b;
+  font-size:13px;
+  line-height:1.5;
+  overflow-wrap:anywhere;
+}
+
 /* Анимации */
 
 @keyframes blink{
@@ -800,10 +631,6 @@ h1{
 @keyframes bob{
   0%,100%{transform:translateY(0)}
   50%{transform:translateY(-2px)}
-}
-
-@keyframes waves{
-  50%{transform:translateX(5%)}
 }
 
 @keyframes shake{
@@ -824,12 +651,6 @@ h1{
 
 /* Адаптация */
 
-@media(min-width:1000px) and (min-height:760px){
-  .app{padding-top:35px}
-  .scene{aspect-ratio:1.8}
-  .key{height:52px}
-}
-
 @media(max-width:850px){
   .app{padding:14px}
   .layout{
@@ -837,44 +658,28 @@ h1{
     gap:12px;
   }
   .panel{padding:15px}
-  .scene{aspect-ratio:1.6}
-  .speech{
-    top:7%;
-    font-size:12px;
-    width:40%;
-  }
-  .rabbit{
-    bottom:16%;
-    height:58%;
-    width:25%;
-  }
-  .chest{
-    left:39%;
-    width:46%;
-    height:41%;
-  }
+  .speech{font-size:12px;padding:8px}
   .code{gap:2px;padding:3px}
-  .slot-number{bottom:-16px}
+  .slot{font-size:23px}
+  .slot-number{font-size:9px;bottom:-15px}
   .tasks{gap:5px}
   .task .equation{font-size:19px}
   .task .label{font-size:10px;letter-spacing:0}
   .key{height:43px}
   .brand-icon{display:none}
   .subtitle{font-size:12px}
-  .top{gap:8px;flex-wrap:wrap}
   .quiet{font-size:12px;padding:10px}
-  .header-actions{gap:8px}
 }
 
 @media(max-width:620px){
   .app{padding:12px}
-  .top{align-items:start}
-  h1{font-size:20px;max-width:260px}
-  .subtitle{font-size:12px}
+  .top{align-items:start;gap:12px}
+  h1{font-size:20px}
   .layout{display:flex;flex-direction:column}
-  .scene{aspect-ratio:1.65}
-  .speech{font-size:12px;padding:8px}
-  .slot{font-size:25px}
+  .speech{font-size:11px;padding:7px}
+  .slot{font-size:20px;border-width:1px}
+  .code{padding:2px;gap:2px;border-width:1px}
+  .slot.active{outline-width:2px}
   .panel{
     display:grid;
     grid-template-columns:1fr 1.1fr;
@@ -888,11 +693,7 @@ h1{
     font-size:12px;
   }
   .current{grid-column:1;margin:0;padding:8px}
-  .keypad{
-    grid-column:2;
-    grid-row:1 / 5;
-    gap:6px;
-  }
+  .keypad{grid-column:2;grid-row:1 / 5;gap:6px}
   .key{height:38px;font-size:21px}
   .open{
     grid-column:1;
@@ -906,17 +707,10 @@ h1{
     margin:5px 0 0;
     min-height:20px;
   }
-  .task{
-    padding:9px 0 11px;
-    border-radius:12px;
-  }
+  .task{padding:9px 0 11px;border-radius:12px}
   .task .equation{font-size:18px}
   .task .label{font-size:9px;margin-bottom:6px}
-  .bottom{font-size:11px}
-  .badge{display:none}
-  .header-actions{position:relative}
-  .help{position:static}
-  .help-content{right:0;font-size:13px}
+  .help-content{font-size:13px}
 }
 
 @media(prefers-reduced-motion:reduce){
@@ -946,7 +740,6 @@ h1{
     <div class="header-actions">
       <details class="help" id="help">
         <summary class="quiet">Как играть</summary>
-
         <div class="help-content">
           <p>
             Пройди пять уровней и собери пять подарков.
@@ -956,8 +749,7 @@ h1{
           <p>
             Выбери пример или окошко сундука и введи ответ.
             Когда все пять цифр готовы, нажми «Открыть сундук».
-            Красные окошки подскажут,
-            какие ответы нужно исправить.
+            Красные окошки подскажут, какие ответы нужно исправить.
           </p>
           <p>
             Дождись, пока кролик заберёт подарок,
@@ -981,40 +773,17 @@ h1{
   </header>
 
   <div class="layout">
-
     <section class="adventure" aria-label="Остров с сундуком">
       <div class="scene" id="scene">
 
-        <div class="sun" aria-hidden="true"></div>
-        <div class="cloud" aria-hidden="true"></div>
-        <div class="cloud two" aria-hidden="true"></div>
-        <div class="island" aria-hidden="true"></div>
-
-        <!-- Пальма -->
-        <svg class="palm" viewBox="0 0 160 290" aria-hidden="true">
-          <path
-            d="M98 279 Q85 168 105 73"
-            fill="none"
-            stroke="#b9895d"
-            stroke-width="17"
-          />
-          <path
-            d="M98 256l-11-5m10-19l-10-5m11-19l-11-5m12-20l-11-5m12-19l-11-5m14-21l-11-5"
-            stroke="#966e4e"
-            stroke-width="4"
-          />
-          <g fill="#5e9c79">
-            <path d="M105 75Q18 26 3 111Q49 71 105 75Z"/>
-            <path d="M105 75Q36 1 35 33Q36 57 105 75Z"/>
-            <path d="M105 75Q100-1 139 12Q119 28 105 75Z"/>
-            <path d="M105 75Q168 18 159 68Q131 58 105 75Z"/>
-            <path d="M105 75Q164 69 158 134Q132 86 105 75Z"/>
-          </g>
-          <g fill="#9a7151">
-            <circle cx="102" cy="77" r="10"/>
-            <circle cx="116" cy="81" r="9"/>
-          </g>
-        </svg>
+        <!-- Наш фон -->
+        <img
+          class="scene-bg"
+          src="images/backgrounds/island.png"
+          alt=""
+          data-asset
+          draggable="false"
+        >
 
         <div class="speech" id="speech">
           Поможешь мне открыть сундук?
@@ -1024,7 +793,6 @@ h1{
         <div class="rabbit" aria-hidden="true">
           <svg viewBox="0 0 180 280">
             <g class="body-bob">
-
               <ellipse
                 cx="93" cy="264" rx="59" ry="10"
                 fill="#98744830"
@@ -1166,7 +934,6 @@ h1{
                 stroke-linecap="round"
               />
 
-              <!-- Здесь появляется подарок -->
               <g class="held"></g>
 
               <ellipse
@@ -1187,27 +954,44 @@ h1{
           </svg>
         </div>
 
-        <!-- Сундук -->
+        <!-- Новый сундук из наших картинок -->
         <div class="chest">
+          <img
+            class="chest-layer chest-back"
+            src="images/chest/back.png"
+            alt=""
+            data-asset
+            draggable="false"
+          >
+
           <div class="shine"></div>
-          <div class="chest-back"></div>
 
           <div class="treasure" aria-hidden="true">
             <svg class="carrot" viewBox="0 0 90 120"></svg>
           </div>
 
-          <div class="lid">
-            <span class="lid-emblem" aria-hidden="true">✦</span>
-          </div>
+          <img
+            class="chest-layer lid"
+            src="images/chest/lid.png"
+            alt=""
+            data-asset
+            draggable="false"
+          >
 
-          <div class="chest-front">
-            <div
-              class="code"
-              id="code"
-              role="group"
-              aria-label="Пять цифр кода"
-            ></div>
-          </div>
+          <img
+            class="chest-layer chest-front"
+            src="images/chest/front.png"
+            alt=""
+            data-asset
+            draggable="false"
+          >
+
+          <div
+            class="code"
+            id="code"
+            role="group"
+            aria-label="Пять цифр кода"
+          ></div>
         </div>
 
         <div
@@ -1262,6 +1046,13 @@ h1{
     <span class="badge">Найдено подарков: 0 из 5</span>
   </footer>
 
+  <p
+    id="asset-warning"
+    class="asset-warning"
+    role="status"
+    hidden
+  ></p>
+
   <noscript>
     Для игры включите JavaScript в браузере.
   </noscript>
@@ -1280,7 +1071,7 @@ const keypad = $('keypad');
 const giftInChest = document.querySelector('.treasure svg');
 const giftInPaws = document.querySelector('.held');
 
-// Ровно пять уровней и пять разных подарков.
+// Пять уровней — пять подарков.
 const gifts = [
   {
     name:'Золотая морковка',
@@ -1399,7 +1190,7 @@ const gifts = [
   }
 ];
 
-// Коллекция создаётся под примерами.
+// Коллекция под примерами.
 const levelBar = document.createElement('div');
 levelBar.id = 'level-bar';
 levelBar.setAttribute('aria-label','Уровни и найденные подарки');
@@ -1417,28 +1208,19 @@ const randomInt = (min,max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-// Генерация примеров.
+// Вычисления в пределах 10.
+// Ответ в каждом окошке — одна цифра от 0 до 9.
 function makeExamples(){
   const pool = [];
 
   for(let a = 0; a <= 10; a++){
     for(let b = 1; b <= 9; b++){
       if(a + b <= 9){
-        pool.push({
-          a,
-          b,
-          sign:'+',
-          result:a + b
-        });
+        pool.push({a,b,sign:'+',result:a + b});
       }
 
       if(a >= b && a - b <= 9){
-        pool.push({
-          a,
-          b,
-          sign:'−',
-          result:a - b
-        });
+        pool.push({a,b,sign:'−',result:a - b});
       }
     }
   }
@@ -1450,17 +1232,13 @@ function makeExamples(){
       })
       .filter(index => index >= 0);
 
-    const index = indices[
-      randomInt(0,indices.length - 1)
-    ];
-
-    return pool.splice(index,1)[0];
+    return pool.splice(
+      indices[randomInt(0,indices.length - 1)],
+      1
+    )[0];
   };
 
-  const set = [
-    take('+'),
-    take('−')
-  ];
+  const set = [take('+'),take('−')];
 
   while(set.length < 5){
     set.push(
@@ -1489,7 +1267,6 @@ function later(action,delay){
   timers.push(setTimeout(action,delay));
 }
 
-// Обновление коллекции.
 function renderCollection(){
   levelBar.replaceChildren();
 
@@ -1536,7 +1313,6 @@ function renderCollection(){
   });
 }
 
-// Начало уровня.
 function startLevel(){
   timers.forEach(clearTimeout);
   timers = [];
@@ -1590,10 +1366,7 @@ function startLevel(){
       </span>
     `;
 
-    slot.addEventListener('click',() => {
-      select(index);
-    });
-
+    slot.addEventListener('click',() => select(index));
     code.append(slot);
 
     const task = document.createElement('button');
@@ -1611,10 +1384,7 @@ function startLevel(){
       `Пример ${index + 1}: ${equation(example)}. Выбрать ответ`
     );
 
-    task.addEventListener('click',() => {
-      select(index);
-    });
-
+    task.addEventListener('click',() => select(index));
     tasks.append(task);
   });
 
@@ -1630,12 +1400,10 @@ function restartGame(){
 
 function select(index){
   if(phase !== 'playing') return;
-
   selected = index;
   render();
 }
 
-// Обновление интерфейса.
 function render(){
   const playing = phase === 'playing';
 
@@ -1647,13 +1415,11 @@ function render(){
     const active = playing && selected === index;
 
     const correct =
-      checked &&
-      filled &&
+      checked && filled &&
       answers[index] === example.result;
 
     const wrong =
-      checked &&
-      filled &&
+      checked && filled &&
       answers[index] !== example.result;
 
     slot.querySelector('.value').textContent =
@@ -1664,11 +1430,7 @@ function render(){
       element.classList.toggle('correct',correct);
       element.classList.toggle('wrong',wrong);
 
-      element.setAttribute(
-        'aria-pressed',
-        String(active)
-      );
-
+      element.setAttribute('aria-pressed',String(active));
       element.disabled = !playing;
     }
 
@@ -1694,10 +1456,7 @@ function render(){
 
   if(playing){
     button.textContent = 'Открыть сундук';
-
-    button.disabled = answers.some(
-      answer => answer === null
-    );
+    button.disabled = answers.some(answer => answer === null);
   } else if(phase === 'opening'){
     button.textContent = 'Кролик забирает подарок…';
     button.disabled = true;
@@ -1714,7 +1473,6 @@ function render(){
   }
 }
 
-// Ввод цифры.
 function enterDigit(digit){
   if(
     phase !== 'playing' ||
@@ -1733,9 +1491,7 @@ function enterDigit(digit){
     (_,offset) => (selected + offset + 1) % 5
   ).find(index => answers[index] === null);
 
-  if(next !== undefined){
-    selected = next;
-  }
+  if(next !== undefined) selected = next;
 
   setStatus(
     answers.every(answer => answer !== null)
@@ -1752,14 +1508,10 @@ function eraseDigit(){
   answers[selected] = null;
   checked = false;
 
-  setStatus(
-    `Введи новый ответ для цифры ${selected + 1}.`
-  );
-
+  setStatus(`Введи новый ответ для цифры ${selected + 1}.`);
   render();
 }
 
-// Проверка кода.
 function checkCode(){
   if(
     phase !== 'playing' ||
@@ -1772,17 +1524,13 @@ function checkCode(){
 
   const wrong = examples
     .map((example,index) => {
-      return answers[index] !== example.result
-        ? index
-        : -1;
+      return answers[index] !== example.result ? index : -1;
     })
     .filter(index => index >= 0);
 
   if(wrong.length){
     selected = wrong[0];
-
-    $('speech').textContent =
-      'Почти! Проверим ещё раз?';
+    $('speech').textContent = 'Почти! Проверим ещё раз?';
 
     setStatus(
       `Проверь ${
@@ -1807,9 +1555,7 @@ function checkCode(){
   scene.classList.add('opened');
 
   $('new-game').disabled = true;
-
-  $('speech').textContent =
-    `Ура! ${gifts[level].name}!`;
+  $('speech').textContent = `Ура! ${gifts[level].name}!`;
 
   setStatus(
     `Сундук открыт! Внутри — ${gifts[level].name.toLowerCase()}.`,
@@ -1824,9 +1570,7 @@ function checkCode(){
 
   later(() => {
     scene.classList.add('carrying');
-
-    $('speech').textContent =
-      'Забираю подарок в коллекцию!';
+    $('speech').textContent = 'Забираю подарок в коллекцию!';
   },2350);
 
   later(() => {
@@ -1836,7 +1580,6 @@ function checkCode(){
   later(finishLevel,4200);
 }
 
-// Завершение уровня.
 function finishLevel(){
   phase = 'won';
   scene.classList.add('victory');
@@ -1868,40 +1611,21 @@ function finishLevel(){
   renderCollection();
   render();
 
-  const colors = [
-    '#edb848',
-    '#e78975',
-    '#65b5ac',
-    '#fff1bd'
-  ];
+  const colors = ['#edb848','#e78975','#65b5ac','#fff1bd'];
 
   for(let i = 0; i < 35; i++){
     const particle = document.createElement('i');
 
-    particle.style.setProperty(
-      '--x',
-      `${randomInt(5,95)}%`
-    );
-
-    particle.style.setProperty(
-      '--delay',
-      `${Math.random() * .8}s`
-    );
-
-    particle.style.setProperty(
-      '--color',
-      colors[i % colors.length]
-    );
+    particle.style.setProperty('--x',`${randomInt(5,95)}%`);
+    particle.style.setProperty('--delay',`${Math.random() * .8}s`);
+    particle.style.setProperty('--color',colors[i % colors.length]);
 
     $('confetti').append(particle);
   }
 
-  later(() => {
-    $('confetti').replaceChildren();
-  },4000);
+  later(() => $('confetti').replaceChildren(),4000);
 }
 
-// Главная кнопка.
 function primaryAction(){
   if(phase === 'playing'){
     checkCode();
@@ -1956,7 +1680,7 @@ for(const value of [1,2,3,4,5,6,7,8,9,0,'delete']){
 $('check').addEventListener('click',primaryAction);
 $('new-game').addEventListener('click',restartGame);
 
-// Управление клавиатурой и закрытие подсказки.
+// Обычная клавиатура.
 document.addEventListener('keydown',event => {
   if($('help').open){
     if(event.key === 'Escape'){
@@ -1964,17 +1688,10 @@ document.addEventListener('keydown',event => {
       $('help').open = false;
       $('help').querySelector('summary').focus();
     }
-
     return;
   }
 
-  if(
-    event.ctrlKey ||
-    event.metaKey ||
-    event.altKey
-  ){
-    return;
-  }
+  if(event.ctrlKey || event.metaKey || event.altKey) return;
 
   if(
     event.key === 'Enter' &&
@@ -2002,14 +1719,12 @@ document.addEventListener('keydown',event => {
     event.key === 'ArrowRight'
   ){
     event.preventDefault();
-
     select(
       (selected + (event.key === 'ArrowRight' ? 1 : 4)) % 5
     );
   }
 });
 
-// Щелчок за пределами подсказки закрывает её.
 document.addEventListener('click',event => {
   const help = $('help');
 
@@ -2018,7 +1733,37 @@ document.addEventListener('click',event => {
   }
 });
 
-// Запуск игры.
+// Сообщение при ошибке загрузки картинки.
+const missingAssets = new Set();
+
+for(const img of document.querySelectorAll('img[data-asset]')){
+  function updateAssetState(ok){
+    const path = img.getAttribute('src');
+
+    if(ok){
+      missingAssets.delete(path);
+    } else {
+      missingAssets.add(path);
+    }
+
+    const warning = $('asset-warning');
+    warning.hidden = missingAssets.size === 0;
+
+    warning.textContent = missingAssets.size
+      ? 'Не удалось загрузить картинки. ' +
+        'Проверь названия и папки: ' +
+        [...missingAssets].join(', ')
+      : '';
+  }
+
+  img.addEventListener('load',() => updateAssetState(true));
+  img.addEventListener('error',() => updateAssetState(false));
+
+  if(img.complete){
+    updateAssetState(img.naturalWidth > 0);
+  }
+}
+
 restartGame();
 </script>
 </body>
