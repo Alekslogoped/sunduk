@@ -1,3 +1,1498 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#e9f6f5">
+<title>Кролик-пират и секрет сундука</title>
+
+<style>
+:root {
+  --ink: #25434b;
+  --muted: #5d767c;
+  --teal: #187e77;
+  --cream: #fff9eb;
+  --bad: #b74b51;
+  --good: #287653;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #eaf5f3;
+  color: var(--ink);
+  font-family: ui-rounded, "Trebuchet MS", Arial, sans-serif;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:disabled {
+  cursor: default;
+}
+
+button:focus-visible,
+summary:focus-visible {
+  outline: 4px solid #387fe1;
+  outline-offset: 4px;
+}
+
+.app {
+  max-width: 1220px;
+  margin: auto;
+  padding: 22px 28px 18px;
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 16px;
+}
+
+.brand {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.brand-icon {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border: 1px solid #e4deca;
+  border-radius: 18px;
+  background: #fff7df;
+  font-size: 30px;
+}
+
+h1 {
+  margin: 0 0 5px;
+  font-size: clamp(20px, 2.4vw, 29px);
+  letter-spacing: -.6px;
+}
+
+.subtitle {
+  margin: 0;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.quiet {
+  padding: 11px 16px;
+  border: 1px solid #cadfda;
+  border-radius: 14px;
+  background: white;
+  font-weight: bold;
+}
+
+.quiet:hover {
+  background: #f8fffc;
+}
+
+.quiet:disabled {
+  opacity: .5;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 276px;
+  gap: 18px;
+}
+
+.adventure {
+  min-width: 0;
+}
+
+/* Остров */
+
+.scene {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1.9;
+  overflow: hidden;
+  isolation: isolate;
+  border: 5px solid white;
+  border-radius: 28px;
+  background: linear-gradient(
+    #d9f1f2 0%,
+    #edfaf4 58%,
+    #a5dbd9 58%,
+    #71c4c5 100%
+  );
+  box-shadow: 0 8px 22px #2d73700b;
+}
+
+.scene::before,
+.scene::after {
+  content: "";
+  position: absolute;
+  left: -15%;
+  bottom: 7%;
+  width: 130%;
+  height: 12%;
+  border-top: 3px solid #ffffff61;
+  border-radius: 50%;
+  animation: waves 6s ease-in-out infinite;
+}
+
+.scene::after {
+  bottom: 15%;
+  left: -4%;
+  animation-delay: -3s;
+}
+
+.sun {
+  position: absolute;
+  top: 9%;
+  right: 10%;
+  width: 9%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #ffe5a4;
+  box-shadow: 0 0 0 12px #ffe7a32b;
+}
+
+.cloud {
+  position: absolute;
+  top: 13%;
+  left: 8%;
+  width: 20%;
+  height: 8%;
+  border-radius: 60px;
+  background: #ffffff9c;
+}
+
+.cloud::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 20%;
+  width: 40%;
+  height: 180%;
+  border-radius: 50%;
+  background: inherit;
+}
+
+.cloud.two {
+  top: 21%;
+  left: 48%;
+  width: 13%;
+  opacity: .7;
+}
+
+.island {
+  position: absolute;
+  left: 6%;
+  bottom: 5%;
+  width: 87%;
+  height: 37%;
+  border-bottom: 12px solid #ddb982;
+  border-radius: 50%;
+  background: #efd298;
+  box-shadow: 0 12px 0 #4eaeb62b;
+}
+
+.island::before {
+  content: "";
+  position: absolute;
+  inset: 10% 7% 20%;
+  border: 2px dashed #d9b97d;
+  border-radius: 50%;
+  opacity: .5;
+}
+
+.palm {
+  position: absolute;
+  top: 0;
+  right: -1%;
+  width: 25%;
+  height: 76%;
+  z-index: 0;
+  transform: rotate(7deg);
+}
+
+.speech {
+  position: absolute;
+  top: 10%;
+  left: 5%;
+  width: 37%;
+  padding: 10px 12px;
+  border: 1px solid #d8e9e5;
+  border-radius: 18px 18px 18px 4px;
+  background: #ffffffed;
+  box-shadow: 0 3px 0 #7195910e;
+  text-align: center;
+  font-size: clamp(11px, 1.45vw, 16px);
+  font-weight: bold;
+  z-index: 5;
+}
+
+/* Кролик */
+
+.rabbit {
+  position: absolute;
+  left: 12%;
+  bottom: 15%;
+  width: 23%;
+  height: 62%;
+  z-index: 4;
+  transition:
+    left 1.2s ease-in-out,
+    bottom 1.2s ease-in-out;
+}
+
+.rabbit svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.rabbit .eye {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: blink 4.8s infinite;
+}
+
+.rabbit .ear {
+  transform-box: fill-box;
+  transform-origin: bottom center;
+  animation: ear 4s ease-in-out infinite;
+}
+
+.rabbit .ear.right {
+  animation-delay: -1.3s;
+}
+
+.rabbit .body-bob {
+  animation: bob 3s ease-in-out infinite;
+}
+
+.held {
+  opacity: 0;
+  transition: opacity .2s;
+}
+
+/* Сундук */
+
+.chest {
+  position: absolute;
+  left: 39%;
+  bottom: 19%;
+  width: 43%;
+  height: 44%;
+  perspective: 800px;
+  z-index: 3;
+}
+
+.lid {
+  position: absolute;
+  inset: 0 0 45%;
+  border: 4px solid #6f402c;
+  border-radius: 35px 35px 4px 4px;
+  background: linear-gradient(#bd7545, #9d552f);
+  box-shadow: inset 0 6px #ffffff20;
+  transform-origin: center bottom;
+  transition: transform 1s ease-in-out;
+  backface-visibility: visible;
+  z-index: 5;
+}
+
+.lid::before,
+.lid::after {
+  content: "";
+  position: absolute;
+  top: -3px;
+  bottom: 0;
+  width: 12%;
+  border: 3px solid #b58334;
+  background: #f7cb63;
+}
+
+.lid::before {
+  left: 12%;
+  border-radius: 12px 12px 0 0;
+}
+
+.lid::after {
+  right: 12%;
+  border-radius: 12px 12px 0 0;
+}
+
+.lid-emblem {
+  position: absolute;
+  top: 15%;
+  left: 43%;
+  color: #ffe1a2;
+  font-size: clamp(16px, 2.5vw, 29px);
+}
+
+.chest-back {
+  position: absolute;
+  inset: 35% 1% 5%;
+  border: 4px solid #6f402c;
+  border-radius: 12px;
+  background: #4b2d23;
+}
+
+.chest-front {
+  position: absolute;
+  inset: 48% 0 0;
+  border: 4px solid #6f402c;
+  border-radius: 3px 3px 16px 16px;
+  background: repeating-linear-gradient(
+    0deg,
+    #9d582e 0 24px,
+    #8e4b28 25px 27px
+  );
+  box-shadow: inset 0 -7px #63362055;
+  z-index: 6;
+}
+
+.chest-front::before,
+.chest-front::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 9%;
+  border: 2px solid #aa7831;
+  background: #f0bb4f;
+}
+
+.chest-front::before {
+  left: 7%;
+}
+
+.chest-front::after {
+  right: 7%;
+}
+
+.code {
+  position: absolute;
+  top: 17%;
+  left: 4%;
+  right: 4%;
+  display: flex;
+  gap: 4px;
+  padding: 5px;
+  border: 2px solid #edc775;
+  border-radius: 11px;
+  background: #663e2c;
+  z-index: 2;
+}
+
+.slot {
+  position: relative;
+  min-width: 0;
+  width: 20%;
+  aspect-ratio: .88;
+  padding: 0;
+  border: 2px solid #e7c995;
+  border-radius: 7px;
+  background: #fff8dc;
+  color: #4f3b2e;
+  box-shadow: 0 2px 0 #402b2040;
+  font-size: clamp(20px, 3vw, 36px);
+  font-weight: 900;
+}
+
+.slot.active {
+  outline: 3px solid #39bcb2;
+  outline-offset: 1px;
+  background: white;
+}
+
+.slot.wrong {
+  border-color: #b74b51;
+  background: #ffe0db;
+}
+
+.slot.correct {
+  border-color: #4f8b55;
+  background: #e1f4d9;
+}
+
+.slot:disabled {
+  opacity: 1;
+}
+
+.slot-number {
+  position: absolute;
+  bottom: -19px;
+  left: 0;
+  right: 0;
+  color: #ffe5b6;
+  font-size: 11px;
+  font-weight: 400;
+}
+
+/* Подарок в сундуке */
+
+.treasure {
+  position: absolute;
+  top: 24%;
+  left: 34%;
+  width: 32%;
+  height: 54%;
+  opacity: 0;
+  z-index: 4;
+  transform: translateY(10px);
+  transition: opacity .5s, transform .8s;
+}
+
+.carrot {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 3px 3px #47221d33);
+}
+
+.shine {
+  position: absolute;
+  inset: -25% -20%;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse,
+    #fff1b8dc,
+    #fff0a000 70%
+  );
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .8s;
+  z-index: 2;
+}
+
+.opened .lid {
+  transform: rotateX(-112deg);
+}
+
+.opened .treasure {
+  opacity: 1;
+  transform: translateY(-42%);
+}
+
+.opened .shine {
+  opacity: 1;
+}
+
+.approaching .rabbit {
+  left: 31%;
+  bottom: 17%;
+}
+
+.carrying .treasure {
+  opacity: 0;
+}
+
+.carrying .held {
+  opacity: 1;
+}
+
+.returning .rabbit {
+  left: 12%;
+  bottom: 15%;
+}
+
+.victory .rabbit .body-bob {
+  animation: celebrate .65s ease-in-out 2;
+}
+
+.scene.shake .chest {
+  animation: shake .5s;
+}
+
+/* Конфетти */
+
+.confetti {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 8;
+}
+
+.confetti i {
+  position: absolute;
+  top: -12px;
+  left: var(--x);
+  width: 9px;
+  height: 15px;
+  border-radius: 3px;
+  background: var(--color);
+  animation: fall 2.6s ease-in both;
+  animation-delay: var(--delay);
+}
+
+/* Примеры */
+
+.tasks {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 9px;
+  margin-top: 14px;
+}
+
+.task {
+  position: relative;
+  min-width: 0;
+  padding: 12px 2px 14px;
+  border: 2px solid #d8e5e1;
+  border-radius: 17px;
+  background: white;
+  box-shadow: 0 3px 0 #cbded840;
+}
+
+.task .label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--muted);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.task .equation {
+  display: block;
+  white-space: nowrap;
+  font-size: clamp(17px, 2.25vw, 26px);
+  font-weight: bold;
+  letter-spacing: -1px;
+}
+
+.task.active {
+  border-color: var(--teal);
+  background: #f7fffb;
+}
+
+.task.filled .label::after {
+  content: " •";
+  color: var(--teal);
+}
+
+.task.wrong {
+  border-color: #ce7370;
+  background: #fff1ed;
+}
+
+.task.correct {
+  border-color: #70aa7d;
+  background: #f0faed;
+}
+
+.task:disabled {
+  opacity: 1;
+}
+
+/* Панель ввода */
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  border: 1px solid #eadfc6;
+  border-radius: 25px;
+  background: var(--cream);
+}
+
+.panel h2 {
+  margin: 0 0 8px;
+  font-size: 20px;
+}
+
+.instruction {
+  margin: 0 0 12px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.current {
+  margin-bottom: 12px;
+  padding: 11px 8px;
+  border: 1px solid #e6ddc9;
+  border-radius: 14px;
+  background: white;
+  text-align: center;
+}
+
+.current small {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.current strong {
+  font-size: 28px;
+  letter-spacing: 1px;
+}
+
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+}
+
+.key {
+  height: 47px;
+  border: 1px solid #dcd7c8;
+  border-radius: 12px;
+  background: white;
+  box-shadow: 0 3px 0 #e4dcc9;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.key:hover {
+  background: #f0faf7;
+}
+
+.key:active {
+  transform: translateY(2px);
+  box-shadow: none;
+}
+
+.key:disabled {
+  opacity: .45;
+}
+
+.key.delete {
+  font-size: 20px;
+}
+
+.key.zero {
+  grid-column: 2;
+}
+
+.open {
+  width: 100%;
+  margin-top: 15px;
+  padding: 14px 8px;
+  border: 0;
+  border-radius: 14px;
+  background: var(--teal);
+  color: white;
+  box-shadow: 0 4px 0 #10635d;
+  font-size: 17px;
+  font-weight: bold;
+}
+
+.open:hover:enabled {
+  background: #126d66;
+}
+
+.open:disabled {
+  background: #d9e3dc;
+  color: #81948a;
+  box-shadow: 0 3px 0 #c9d5cd;
+}
+
+.status {
+  min-height: 40px;
+  margin: 13px 0 0;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.status.error {
+  color: var(--bad);
+}
+
+.status.success {
+  color: var(--good);
+  font-weight: bold;
+}
+
+/* Коллекция */
+
+#level-bar {
+  display: flex;
+  justify-content: center;
+  gap: 9px;
+  margin-top: 14px;
+}
+
+.level-gift {
+  flex: 1;
+  max-width: 125px;
+  padding: 7px 3px;
+  border: 2px solid #d2e0db;
+  border-radius: 14px;
+  background: #ffffff85;
+  color: #708680;
+  text-align: center;
+  font-size: 11px;
+}
+
+.level-gift.current {
+  border-color: #187e77;
+  background: #fff9eb;
+  color: #25434b;
+  font-weight: bold;
+}
+
+.level-gift.found {
+  border-color: #77a988;
+  background: #f3ffed;
+  color: #287653;
+}
+
+.level-gift svg {
+  display: block;
+  width: 35px;
+  height: 40px;
+  margin: 0 auto 3px;
+}
+
+.level-gift .mystery {
+  display: grid;
+  place-items: center;
+  height: 40px;
+  margin-bottom: 3px;
+  font-size: 26px;
+}
+
+/* Подсказка внизу */
+
+.bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 15px;
+  margin-top: 16px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+details {
+  max-width: 710px;
+}
+
+summary {
+  cursor: pointer;
+  font-weight: bold;
+}
+
+details p {
+  margin: 8px 0;
+  line-height: 1.6;
+}
+
+.badge {
+  padding: 5px 9px;
+  border: 1px solid #cddeda;
+  border-radius: 20px;
+  white-space: nowrap;
+  font-size: 11px;
+}
+
+/* Анимации */
+
+@keyframes blink {
+  0%, 42%, 46%, 100% {
+    transform: scaleY(1);
+  }
+
+  44% {
+    transform: scaleY(.1);
+  }
+}
+
+@keyframes ear {
+  0%, 70%, 100% {
+    transform: rotate(0);
+  }
+
+  76% {
+    transform: rotate(-8deg);
+  }
+
+  82% {
+    transform: rotate(5deg);
+  }
+
+  88% {
+    transform: rotate(0);
+  }
+}
+
+@keyframes bob {
+  0%, 100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes waves {
+  50% {
+    transform: translateX(5%);
+  }
+}
+
+@keyframes shake {
+  20%, 60% {
+    transform: translateX(-6px);
+  }
+
+  40%, 80% {
+    transform: translateX(6px);
+  }
+}
+
+@keyframes celebrate {
+  50% {
+    transform: translateY(-14px);
+  }
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(500px) rotate(650deg);
+    opacity: 0;
+  }
+}
+
+/* Адаптация */
+
+@media (min-width: 1000px) and (min-height: 760px) {
+  .app {
+    padding-top: 35px;
+  }
+
+  .scene {
+    aspect-ratio: 1.8;
+  }
+
+  .key {
+    height: 52px;
+  }
+}
+
+@media (max-width: 850px) {
+  .app {
+    padding: 14px;
+  }
+
+  .layout {
+    grid-template-columns: minmax(0, 1fr) 225px;
+    gap: 12px;
+  }
+
+  .panel {
+    padding: 15px;
+  }
+
+  .scene {
+    aspect-ratio: 1.6;
+  }
+
+  .speech {
+    top: 7%;
+    width: 40%;
+    font-size: 12px;
+  }
+
+  .rabbit {
+    bottom: 16%;
+    width: 25%;
+    height: 58%;
+  }
+
+  .chest {
+    left: 39%;
+    width: 46%;
+    height: 41%;
+  }
+
+  .code {
+    gap: 2px;
+    padding: 3px;
+  }
+
+  .slot-number {
+    bottom: -16px;
+  }
+
+  .tasks {
+    gap: 5px;
+  }
+
+  .task .equation {
+    font-size: 19px;
+  }
+
+  .task .label {
+    font-size: 10px;
+    letter-spacing: 0;
+  }
+
+  .key {
+    height: 43px;
+  }
+
+  .brand-icon {
+    display: none;
+  }
+
+  .subtitle {
+    font-size: 12px;
+  }
+
+  .top {
+    gap: 8px;
+  }
+
+  .quiet {
+    padding: 10px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 620px) {
+  .app {
+    padding: 12px;
+  }
+
+  .top {
+    align-items: start;
+  }
+
+  h1 {
+    max-width: 260px;
+    font-size: 20px;
+  }
+
+  .subtitle {
+    font-size: 12px;
+  }
+
+  .layout {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .scene {
+    aspect-ratio: 1.65;
+  }
+
+  .speech {
+    padding: 8px;
+    font-size: 12px;
+  }
+
+  .slot {
+    font-size: 25px;
+  }
+
+  .panel {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    gap: 8px 15px;
+    padding: 16px;
+  }
+
+  .panel h2 {
+    margin: 0;
+    font-size: 18px;
+  }
+
+  .instruction {
+    grid-column: 1;
+    margin: 0;
+    font-size: 12px;
+  }
+
+  .current {
+    grid-column: 1;
+    margin: 0;
+    padding: 8px;
+  }
+
+  .keypad {
+    grid-column: 2;
+    grid-row: 1 / 5;
+    gap: 6px;
+  }
+
+  .key {
+    height: 38px;
+    font-size: 21px;
+  }
+
+  .open {
+    grid-column: 1;
+    align-self: end;
+    margin: 0;
+    padding: 11px 3px;
+    font-size: 14px;
+  }
+
+  .status {
+    grid-column: 1 / -1;
+    min-height: 20px;
+    margin: 5px 0 0;
+  }
+
+  .task {
+    padding: 9px 0 11px;
+    border-radius: 12px;
+  }
+
+  .task .equation {
+    font-size: 18px;
+  }
+
+  .task .label {
+    margin-bottom: 6px;
+    font-size: 9px;
+  }
+
+  .bottom {
+    font-size: 11px;
+  }
+
+  .badge {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .confetti {
+    display: none;
+  }
+}
+</style>
+</head>
+
+<body>
+<main class="app" aria-label="Математическая игра">
+
+  <header class="top">
+    <div class="brand">
+      <span class="brand-icon" aria-hidden="true">⚓</span>
+
+      <div>
+        <h1>Кролик-пират и секрет сундука</h1>
+        <p class="subtitle">
+          Уровень 1 из 5 · Реши пять примеров и открой сундук!
+        </p>
+      </div>
+    </div>
+
+    <button class="quiet" id="new-game" type="button">
+      Начать заново ↻
+    </button>
+  </header>
+
+  <div class="layout">
+
+    <section class="adventure" aria-label="Остров с сундуком">
+
+      <div class="scene" id="scene">
+        <div class="sun" aria-hidden="true"></div>
+        <div class="cloud" aria-hidden="true"></div>
+        <div class="cloud two" aria-hidden="true"></div>
+        <div class="island" aria-hidden="true"></div>
+
+        <!-- Пальма -->
+        <svg
+          class="palm"
+          viewBox="0 0 160 290"
+          aria-hidden="true"
+        >
+          <path
+            d="M98 279 Q85 168 105 73"
+            fill="none"
+            stroke="#b9895d"
+            stroke-width="17"
+          />
+
+          <path
+            d="
+              M98 256l-11-5
+              m10-19l-10-5
+              m11-19l-11-5
+              m12-20l-11-5
+              m12-19l-11-5
+              m14-21l-11-5
+            "
+            stroke="#966e4e"
+            stroke-width="4"
+          />
+
+          <g fill="#5e9c79">
+            <path d="M105 75Q18 26 3 111Q49 71 105 75Z"/>
+            <path d="M105 75Q36 1 35 33Q36 57 105 75Z"/>
+            <path d="M105 75Q100-1 139 12Q119 28 105 75Z"/>
+            <path d="M105 75Q168 18 159 68Q131 58 105 75Z"/>
+            <path d="M105 75Q164 69 158 134Q132 86 105 75Z"/>
+          </g>
+
+          <g fill="#9a7151">
+            <circle cx="102" cy="77" r="10"/>
+            <circle cx="116" cy="81" r="9"/>
+          </g>
+        </svg>
+
+        <div class="speech" id="speech">
+          Поможешь собрать пять подарков?
+        </div>
+
+        <!-- Кролик-пират -->
+        <div class="rabbit" aria-hidden="true">
+          <svg viewBox="0 0 180 280">
+            <g class="body-bob">
+
+              <ellipse
+                cx="93" cy="264"
+                rx="59" ry="10"
+                fill="#98744830"
+              />
+
+              <!-- Левое ухо -->
+              <g class="ear">
+                <ellipse
+                  cx="64" cy="65"
+                  rx="18" ry="57"
+                  fill="#fff9ed"
+                  stroke="#b8a99a"
+                  stroke-width="3"
+                  transform="rotate(-13 64 65)"
+                />
+                <ellipse
+                  cx="64" cy="57"
+                  rx="8" ry="38"
+                  fill="#eab6ae"
+                  transform="rotate(-13 64 57)"
+                />
+              </g>
+
+              <!-- Правое ухо -->
+              <g class="ear right">
+                <ellipse
+                  cx="115" cy="65"
+                  rx="18" ry="57"
+                  fill="#fff9ed"
+                  stroke="#b8a99a"
+                  stroke-width="3"
+                  transform="rotate(13 115 65)"
+                />
+                <ellipse
+                  cx="115" cy="57"
+                  rx="8" ry="38"
+                  fill="#eab6ae"
+                  transform="rotate(13 115 57)"
+                />
+              </g>
+
+              <!-- Хвост -->
+              <ellipse
+                cx="135" cy="219"
+                rx="18" ry="17"
+                fill="#fff9ed"
+                stroke="#b8a99a"
+                stroke-width="3"
+              />
+
+              <!-- Тело -->
+              <ellipse
+                cx="90" cy="214"
+                rx="43" ry="47"
+                fill="#fff9ed"
+                stroke="#b8a99a"
+                stroke-width="3"
+              />
+
+              <!-- Тельняшка -->
+              <path
+                d="M54 185Q90 172 126 185L125 231Q90 240 55 231Z"
+                fill="#d45e50"
+              />
+
+              <path
+                d="M55 197h70m-70 15h70m-70 14h70"
+                stroke="#fff3dc"
+                stroke-width="8"
+              />
+
+              <!-- Ремень -->
+              <path
+                d="M70 180l38 56"
+                stroke="#5b4943"
+                stroke-width="12"
+              />
+
+              <rect
+                x="85" y="207"
+                width="16" height="16"
+                rx="3"
+                fill="#efc15f"
+              />
+
+              <!-- Сапожки -->
+              <ellipse
+                cx="63" cy="253"
+                rx="24" ry="13"
+                fill="#695449"
+              />
+
+              <ellipse
+                cx="114" cy="253"
+                rx="24" ry="13"
+                fill="#695449"
+              />
+
+              <!-- Голова -->
+              <ellipse
+                cx="90" cy="133"
+                rx="57" ry="53"
+                fill="#fff9ed"
+                stroke="#b8a99a"
+                stroke-width="3"
+              />
+
+              <!-- Шляпа -->
+              <path
+                d="M30 112Q43 99 52 75Q85 92 126 74Q138 100 153 111Q94 124 30 112Z"
+                fill="#394c54"
+                stroke="#293c44"
+                stroke-width="4"
+              />
+
+              <path
+                d="M40 110Q94 119 143 109"
+                fill="none"
+                stroke="#e5ba64"
+                stroke-width="4"
+              />
+
+              <path
+                d="M87 98l12 11m-12 0l12-11"
+                stroke="#f9ead0"
+                stroke-width="3"
+              />
+
+              <circle
+                cx="93" cy="94"
+                r="5"
+                fill="#f9ead0"
+              />
+
+              <!-- Повязка -->
+              <path
+                d="M43 126l89 20"
+                stroke="#4b4643"
+                stroke-width="4"
+              />
+
+              <ellipse
+                cx="114" cy="140"
+                rx="15" ry="16"
+                fill="#35444a"
+              />
+
+              <!-- Глаз -->
+              <ellipse
+                class="eye"
+                cx="69" cy="138"
+                rx="5" ry="7"
+                fill="#35444a"
+              />
+
+              <circle
+                cx="70" cy="136"
+                r="1.5"
+                fill="white"
+              />
+
+              <!-- Щёчки -->
+              <ellipse
+                cx="56" cy="152"
+                rx="10" ry="6"
+                fill="#f4cac0"
+              />
+
+              <ellipse
+                cx="126" cy="156"
+                rx="9" ry="5"
+                fill="#f4cac0"
+              />
+
+              <!-- Нос -->
+              <path
+                d="M82 152Q90 146 98 152L90 158Z"
+                fill="#db9d98"
+              />
+
+              <!-- Улыбка -->
+              <path
+                d="M90 159v6m0-1q-10 9-17-1m17 1q10 9 17-1"
+                fill="none"
+                stroke="#8c7365"
+                stroke-width="2.5"
+                stroke-linecap="round"
+              />
+
+              <!-- Здесь появляется подарок в лапках -->
+              <g class="held"></g>
+
+              <!-- Лапки -->
+              <ellipse
+                cx="53" cy="211"
+                rx="13" ry="23"
+                fill="#fff9ed"
+                stroke="#b8a99a"
+                stroke-width="3"
+                transform="rotate(-20 53 211)"
+              />
+
+              <ellipse
+                cx="124" cy="211"
+                rx="13" ry="23"
+                fill="#fff9ed"
+                stroke="#b8a99a"
+                stroke-width="3"
+                transform="rotate(35 124 211)"
+              />
+
+            </g>
+          </svg>
+        </div>
+
+        <!-- Сундук -->
+        <div class="chest">
+          <div class="shine"></div>
+          <div class="chest-back"></div>
+
+          <div class="treasure" aria-hidden="true">
+            <svg class="carrot" viewBox="0 0 90 120"></svg>
+          </div>
+
+          <div class="lid">
+            <span class="lid-emblem" aria-hidden="true">✦</span>
+          </div>
+
+          <div class="chest-front">
+            <div
+              class="code"
+              id="code"
+              role="group"
+              aria-label="Пять цифр кода"
+            ></div>
+          </div>
+        </div>
+
+        <div
+          class="confetti"
+          id="confetti"
+          aria-hidden="true"
+        ></div>
+      </div>
+
+      <!-- Карточки с примерами -->
+      <div
+        class="tasks"
+        id="tasks"
+        role="group"
+        aria-label="Пять примеров"
+      ></div>
+
+      <!-- Пять уровней и коллекция подарков -->
+      <div
+        id="level-bar"
+        role="group"
+        aria-label="Уровни и найденные подарки"
+      ></div>
+
+    </section>
+
+    <!-- Ввод ответа -->
+    <section class="panel" aria-label="Панель ввода ответа">
+      <h2>Секретный код</h2>
+
+      <p class="instruction">
+        Выбери пример. Реши его и нажми нужную цифру.
+      </p>
+
+      <div class="current">
+        <small id="current-label">Цифра 1 из 5</small>
+        <strong id="current-equation"></strong>
+      </div>
+
+      <div
+        class="keypad"
+        id="keypad"
+        role="group"
+        aria-label="Цифры для ввода"
+      ></div>
+
+      <button
+        class="open"
+        id="check"
+        type="button"
+        disabled
+      >
+        Открыть сундук
+      </button>
+
+      <p
+        class="status"
+        id="status"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+      ></p>
+    </section>
+
+  </div>
+
+  <footer class="bottom">
+    <details>
+      <summary>Как играть</summary>
+      <p>
+        Пройди пять уровней и собери пять подарков.
+        На каждом уровне реши пять примеров.
+        Каждый ответ — одна цифра секретного кода.
+        Нажми на пример или окошко сундука,
+        затем введи ответ кнопкой или с клавиатуры.
+        Когда все цифры введены, нажми «Открыть сундук».
+        Красные окошки подскажут, какие ответы нужно проверить.
+        После открытия кролик заберёт подарок.
+        Нажми «Следующий уровень», чтобы продолжить.
+        На клавиатуре: цифры — ответ,
+        стрелки влево и вправо — выбор окошка,
+        Backspace или Delete — стереть.
+      </p>
+    </details>
+
+    <span class="badge">Найдено подарков: 0 из 5</span>
+  </footer>
+
+  <noscript>
+    Для игры включите JavaScript в браузере.
+  </noscript>
+
+</main>
+
 <script>
 'use strict';
 
@@ -7,11 +1502,12 @@ const scene = $('scene');
 const code = $('code');
 const tasks = $('tasks');
 const keypad = $('keypad');
+const levelBar = $('level-bar');
 
 const giftInChest = document.querySelector('.treasure svg');
 const giftInPaws = document.querySelector('.held');
 
-// Пять уровней — пять разных подарков.
+// Ровно пять подарков — по одному на каждый уровень.
 const gifts = [
   {
     name: 'Золотая морковка',
@@ -76,10 +1572,8 @@ const gifts = [
         stroke-linejoin="round"
       />
       <rect
-        x="14"
-        y="78"
-        width="62"
-        height="17"
+        x="14" y="78"
+        width="62" height="17"
         rx="5"
         fill="#e7ab3c"
         stroke="#b58329"
@@ -122,8 +1616,7 @@ const gifts = [
         stroke-width="3"
       />
       <circle
-        cx="45"
-        cy="67"
+        cx="45" cy="67"
         r="23"
         fill="#fff7e9"
         stroke="#c8b6d6"
@@ -160,10 +1653,8 @@ const gifts = [
         stroke-linecap="round"
       />
       <rect
-        x="25"
-        y="95"
-        width="40"
-        height="13"
+        x="25" y="95"
+        width="40" height="13"
         rx="4"
         fill="#e9af3c"
         stroke="#b58329"
@@ -177,76 +1668,6 @@ const gifts = [
   }
 ];
 
-// Создаём полоску уровней и коллекции.
-const levelBar = document.createElement('div');
-
-levelBar.id = 'level-bar';
-levelBar.setAttribute(
-  'aria-label',
-  'Уровни и найденные подарки'
-);
-
-document.querySelector('.adventure').append(levelBar);
-
-// Дополнительное оформление коллекции.
-const extraStyle = document.createElement('style');
-
-extraStyle.textContent = `
-  #level-bar {
-    display: flex;
-    justify-content: center;
-    gap: 9px;
-    margin-top: 14px;
-  }
-
-  .level-gift {
-    flex: 1;
-    max-width: 125px;
-    padding: 7px 3px;
-    border: 2px solid #d2e0db;
-    border-radius: 14px;
-    background: #ffffff85;
-    color: #708680;
-    text-align: center;
-    font-size: 11px;
-  }
-
-  .level-gift.current {
-    border-color: #187e77;
-    background: #fff9eb;
-    color: #25434b;
-    font-weight: bold;
-  }
-
-  .level-gift.found {
-    border-color: #77a988;
-    background: #f3ffed;
-    color: #287653;
-  }
-
-  .level-gift svg {
-    display: block;
-    width: 35px;
-    height: 40px;
-    margin: 0 auto 3px;
-  }
-
-  .level-gift .mystery {
-    display: grid;
-    place-items: center;
-    height: 40px;
-    margin-bottom: 3px;
-    font-size: 26px;
-  }
-
-  .rabbit svg {
-    width: 100%;
-    height: 100%;
-  }
-`;
-
-document.head.append(extraStyle);
-
 let level = 0;
 let examples = [];
 let answers = [];
@@ -259,12 +1680,12 @@ const randomInt = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-// Генерация пяти разных примеров.
+// Пять разных примеров на каждом уровне.
 function makeExamples() {
   const pool = [];
 
-  // Вычисления в пределах 10.
-  // Ответы — от 0 до 9, чтобы в окошке была одна цифра.
+  // Все вычисления в пределах 10.
+  // Ответы от 0 до 9 — одна цифра в каждом окошке.
   for (let a = 0; a <= 10; a++) {
     for (let b = 1; b <= 9; b++) {
       if (a + b <= 9) {
@@ -301,7 +1722,7 @@ function makeExamples() {
     return pool.splice(chosenIndex, 1)[0];
   }
 
-  // Обязательно один пример на сложение и один на вычитание.
+  // В каждом наборе есть и сложение, и вычитание.
   const set = [
     take('+'),
     take('−')
@@ -312,7 +1733,6 @@ function makeExamples() {
     set.push(pool.splice(index, 1)[0]);
   }
 
-  // Перемешивание.
   for (let i = set.length - 1; i > 0; i--) {
     const j = randomInt(0, i);
     [set[i], set[j]] = [set[j], set[i]];
@@ -334,8 +1754,7 @@ function later(action, delay) {
   timers.push(setTimeout(action, delay));
 }
 
-// Показываем собранные подарки.
-// Будущие подарки скрыты вопросительными знаками.
+// Коллекция найденных подарков.
 function renderCollection() {
   levelBar.replaceChildren();
 
@@ -393,7 +1812,6 @@ function startLevel() {
   phase = 'playing';
   checked = false;
 
-  // Возвращаем сундук и героя в исходное положение.
   scene.className = 'scene';
   void scene.offsetWidth;
 
@@ -413,10 +1831,10 @@ function startLevel() {
   document.querySelector('.badge').textContent =
     `Найдено подарков: ${level} из ${gifts.length}`;
 
-  // Подарок внутри сундука.
+  // Текущий подарок в сундуке.
   giftInChest.innerHTML = gifts[level].art;
 
-  // Такой же подарок в лапках кролика.
+  // Такой же подарок появится в лапках героя.
   giftInPaws.innerHTML = `
     <g transform="translate(91 177) scale(.4)">
       ${gifts[level].art}
@@ -427,7 +1845,6 @@ function startLevel() {
   tasks.replaceChildren();
 
   examples.forEach((example, index) => {
-    // Окошко на сундуке.
     const slot = document.createElement('button');
 
     slot.type = 'button';
@@ -446,7 +1863,6 @@ function startLevel() {
 
     code.append(slot);
 
-    // Карточка примера.
     const task = document.createElement('button');
 
     task.type = 'button';
@@ -476,12 +1892,13 @@ function startLevel() {
   render();
 }
 
-// Полный перезапуск с первого уровня.
+// Возврат к первому уровню.
 function restartGame() {
   level = 0;
   startLevel();
 }
 
+// Выбор примера и соответствующего окошка.
 function select(index) {
   if (phase !== 'playing') return;
 
@@ -489,7 +1906,7 @@ function select(index) {
   render();
 }
 
-// Обновление игрового интерфейса.
+// Обновление интерфейса.
 function render() {
   const playing = phase === 'playing';
 
@@ -568,7 +1985,7 @@ function render() {
   }
 }
 
-// Ввод ответа.
+// Ввод цифры.
 function enterDigit(digit) {
   if (
     phase !== 'playing' ||
@@ -582,6 +1999,7 @@ function enterDigit(digit) {
   answers[selected] = digit;
   checked = false;
 
+  // Автоматически выбираем следующее пустое окошко.
   const next = Array.from(
     { length: 5 },
     (_, offset) => (selected + offset + 1) % 5
@@ -604,7 +2022,7 @@ function enterDigit(digit) {
   render();
 }
 
-// Стереть выбранную цифру.
+// Удаление ответа.
 function eraseDigit() {
   if (phase !== 'playing') return;
 
@@ -618,7 +2036,7 @@ function eraseDigit() {
   render();
 }
 
-// Проверка всех пяти ответов.
+// Проверка пяти цифр.
 function checkCode() {
   if (
     phase !== 'playing' ||
@@ -661,7 +2079,7 @@ function checkCode() {
     return;
   }
 
-  // Верный код — открываем сундук.
+  // Код правильный.
   phase = 'opening';
 
   scene.classList.remove('shake');
@@ -685,7 +2103,7 @@ function checkCode() {
     scene.classList.add('approaching');
   }, 1000);
 
-  // Забирает текущий подарок.
+  // Забирает подарок.
   later(() => {
     scene.classList.add('carrying');
 
@@ -701,7 +2119,7 @@ function checkCode() {
   later(finishLevel, 4200);
 }
 
-// Завершение уровня.
+// Уровень пройден.
 function finishLevel() {
   phase = 'won';
 
@@ -734,7 +2152,7 @@ function finishLevel() {
   renderCollection();
   render();
 
-  // Праздничное конфетти.
+  // Конфетти.
   const colors = [
     '#edb848',
     '#e78975',
@@ -768,8 +2186,7 @@ function finishLevel() {
   }, 4000);
 }
 
-// Главная кнопка:
-// проверка → следующий уровень → повтор всей игры.
+// Действие главной кнопки.
 function primaryAction() {
   if (phase === 'playing') {
     checkCode();
@@ -778,6 +2195,8 @@ function primaryAction() {
 
   if (phase !== 'won') return;
 
+  // После пятого уровня начинаем игру заново.
+  // Шестого уровня нет.
   if (level === gifts.length - 1) {
     restartGame();
     return;
@@ -787,7 +2206,7 @@ function primaryAction() {
   startLevel();
 }
 
-// Экранная клавиатура.
+// Создание экранной клавиатуры.
 for (
   const value of [
     1, 2, 3,
@@ -833,7 +2252,7 @@ for (
 $('check').addEventListener('click', primaryAction);
 $('new-game').addEventListener('click', restartGame);
 
-// Обычная клавиатура.
+// Управление с клавиатуры.
 document.addEventListener('keydown', event => {
   if (
     event.ctrlKey ||
@@ -878,6 +2297,8 @@ document.addEventListener('keydown', event => {
   }
 });
 
-// Начинаем с первого уровня.
+// Запуск игры.
 restartGame();
 </script>
+</body>
+</html>
