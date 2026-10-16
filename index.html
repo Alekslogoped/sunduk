@@ -55,29 +55,6 @@ summary:focus-visible{
   flex-wrap:wrap;
 }
 
-.brand{
-  display:flex;
-  gap:12px;
-  align-items:center;
-}
-
-.brand-icon{
-  font-size:30px;
-  background:#fff7df;
-  border-radius:18px;
-  width:56px;
-  height:56px;
-  display:grid;
-  place-items:center;
-  border:1px solid #e4deca;
-}
-
-h1{
-  font-size:clamp(20px,2.4vw,29px);
-  margin:0 0 5px;
-  letter-spacing:-.6px;
-}
-
 .subtitle{
   font-size:14px;
   color:var(--muted);
@@ -147,15 +124,16 @@ h1{
 
 .help-content p:last-child{margin-bottom:0}
 
+/* Игровое поле и узкая панель справа */
+
 .layout{
   display:grid;
-  grid-template-columns:minmax(0,1fr) 276px;
-  gap:18px;
+  grid-template-columns:minmax(0,1fr) 70px;
+  gap:12px;
+  align-items:start;
 }
 
 .adventure{min-width:0}
-
-/* Фон */
 
 .scene{
   position:relative;
@@ -196,7 +174,7 @@ h1{
   box-shadow:0 3px 0 #7195910e;
 }
 
-/* Временный герой */
+/* Кролик */
 
 .rabbit{
   position:absolute;
@@ -237,7 +215,7 @@ h1{
   transition:opacity .2s;
 }
 
-/* Четыре детали сундука */
+/* Сундук */
 
 .chest{
   position:absolute;
@@ -262,8 +240,6 @@ h1{
 .chest-back{z-index:1}
 .chest-front{z-index:5}
 
-/* Закрытая крышка */
-
 .lid{
   z-index:4;
   transform-origin:50% 43%;
@@ -271,8 +247,6 @@ h1{
   transition:opacity .5s ease,transform .75s ease;
   will-change:transform,opacity;
 }
-
-/* Открытая крышка */
 
 .lid-open{
   z-index:2;
@@ -282,8 +256,6 @@ h1{
   transition:opacity .65s ease,transform .8s ease;
   pointer-events:none;
 }
-
-/* Переход между двумя изображениями крышки */
 
 .opened .lid{
   opacity:0;
@@ -301,7 +273,7 @@ h1{
   transition:none!important;
 }
 
-/* Пять окошек */
+/* Окошки кода */
 
 .code{
   position:absolute;
@@ -406,15 +378,8 @@ h1{
 .carrying .treasure{opacity:0}
 .carrying .held{opacity:1}
 
-.approaching .rabbit{
-  left:31%;
-  bottom:17%;
-}
-
-.returning .rabbit{
-  left:13%;
-  bottom:17%;
-}
+.approaching .rabbit{left:31%;bottom:17%}
+.returning .rabbit{left:13%;bottom:17%}
 
 .victory .rabbit .body-bob{
   animation:celebrate .65s ease-in-out 2;
@@ -445,7 +410,7 @@ h1{
   animation-delay:var(--delay);
 }
 
-/* Карточки примеров */
+/* Примеры */
 
 .tasks{
   display:grid;
@@ -490,100 +455,76 @@ h1{
   color:var(--teal);
 }
 
-.task.wrong{
-  border-color:#ce7370;
-  background:#fff1ed;
-}
-
-.task.correct{
-  border-color:#70aa7d;
-  background:#f0faed;
-}
-
+.task.wrong{border-color:#ce7370;background:#fff1ed}
+.task.correct{border-color:#70aa7d;background:#f0faed}
 .task:disabled{opacity:1}
 
-/* Панель ввода */
+/* Узкая вертикальная клавиатура */
 
 .panel{
   background:var(--cream);
   border:1px solid #eadfc6;
-  border-radius:25px;
-  padding:20px;
+  border-radius:18px;
+  padding:8px;
   display:flex;
   flex-direction:column;
-}
-
-.panel h2{
-  font-size:20px;
-  margin:0 0 8px;
-}
-
-.instruction{
-  font-size:14px;
-  color:var(--muted);
-  line-height:1.5;
-  margin:0 0 12px;
-}
-
-.current{
-  background:white;
-  border:1px solid #e6ddc9;
-  border-radius:14px;
-  text-align:center;
-  padding:11px 8px;
-  margin-bottom:12px;
-}
-
-.current small{
-  display:block;
-  font-size:12px;
-  color:var(--muted);
-  margin-bottom:5px;
-}
-
-.current strong{
-  font-size:28px;
-  letter-spacing:1px;
+  gap:8px;
 }
 
 .keypad{
   display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:7px;
+  grid-template-columns:1fr;
+  gap:4px;
 }
 
 .key{
-  font-size:24px;
+  font-size:23px;
   font-weight:bold;
   border:1px solid #dcd7c8;
   background:#fff;
-  border-radius:12px;
-  height:47px;
-  box-shadow:0 3px 0 #e4dcc9;
+  border-radius:10px;
+  height:36px;
+  width:100%;
+  padding:0;
+  box-shadow:0 2px 0 #e4dcc9;
 }
 
-.key:hover{background:#f0faf7}
+.key:hover:enabled{background:#f0faf7}
 
-.key:active{
-  transform:translateY(2px);
+.key:active:enabled{
+  transform:translateY(1px);
   box-shadow:none;
 }
 
 .key:disabled{opacity:.45}
-.key.delete{font-size:20px}
-.key.zero{grid-column:2}
+
+.rail-actions{
+  display:grid;
+  gap:8px;
+  padding-top:4px;
+  border-top:1px solid #e6ddc9;
+}
+
+.key.delete{font-size:22px}
 
 .open{
+  display:grid;
+  place-items:center;
   width:100%;
+  height:42px;
   border:0;
   background:var(--teal);
   color:white;
-  border-radius:14px;
-  padding:14px 8px;
-  font-size:17px;
-  font-weight:bold;
-  margin-top:15px;
-  box-shadow:0 4px 0 #10635d;
+  border-radius:11px;
+  padding:8px;
+  box-shadow:0 3px 0 #10635d;
+}
+
+.open svg{
+  display:block;
+  width:26px;
+  height:26px;
+  pointer-events:none;
 }
 
 .open:hover:enabled{background:#126d66}
@@ -591,22 +532,23 @@ h1{
 .open:disabled{
   background:#d9e3dc;
   color:#81948a;
-  box-shadow:0 3px 0 #c9d5cd;
+  box-shadow:0 2px 0 #c9d5cd;
+}
+
+.open.waiting svg{
+  animation:waiting 1s ease-in-out infinite;
 }
 
 .status{
   font-size:13px;
   line-height:1.5;
-  min-height:40px;
-  margin:13px 0 0;
+  min-height:20px;
+  margin:12px 2px 0;
+  color:var(--muted);
 }
 
 .status.error{color:var(--bad)}
-
-.status.success{
-  color:var(--good);
-  font-weight:bold;
-}
+.status.success{color:var(--good);font-weight:bold}
 
 /* Коллекция */
 
@@ -685,6 +627,10 @@ h1{
 
 /* Анимации */
 
+@keyframes waiting{
+  50%{opacity:.35}
+}
+
 @keyframes blink{
   0%,42%,46%,100%{transform:scaleY(1)}
   44%{transform:scaleY(.1)}
@@ -724,11 +670,12 @@ h1{
   .app{padding:14px}
 
   .layout{
-    grid-template-columns:minmax(0,1fr) 225px;
-    gap:12px;
+    grid-template-columns:minmax(0,1fr) 64px;
+    gap:10px;
   }
 
-  .panel{padding:15px}
+  .panel{padding:7px}
+  .key{height:33px;font-size:22px}
   .speech{font-size:12px;padding:8px}
   .code{gap:2px;padding:3px}
   .slot{font-size:23px}
@@ -736,73 +683,41 @@ h1{
   .tasks{gap:5px}
   .task .equation{font-size:19px}
   .task .label{font-size:10px;letter-spacing:0}
-  .key{height:43px}
-  .brand-icon{display:none}
   .subtitle{font-size:12px}
   .quiet{font-size:12px;padding:10px}
 }
 
 @media(max-width:620px){
-  .app{padding:12px}
-  .top{align-items:start;gap:12px}
-  h1{font-size:20px}
-  .layout{display:flex;flex-direction:column}
-  .speech{font-size:11px;padding:7px}
-  .slot{font-size:20px;border-width:1px}
+  .app{padding:10px}
+  .top{gap:8px;margin-bottom:10px}
+
+  .layout{
+    grid-template-columns:minmax(0,1fr) 52px;
+    gap:7px;
+  }
+
+  .header-actions{gap:6px}
+  .panel{padding:5px;border-radius:14px;gap:6px}
+  .keypad{gap:3px}
+  .key{height:28px;font-size:20px}
+  .rail-actions{gap:6px}
+  .open{height:34px;padding:5px}
+  .open svg{width:24px;height:24px}
+  .speech{font-size:10px;padding:5px;width:39%}
+  .scene{border-width:3px;border-radius:18px}
+  .slot{font-size:17px;border-width:1px}
   .code{padding:2px;gap:2px;border-width:1px}
   .slot.active{outline-width:2px}
+  .task{padding:9px 0 11px;border-radius:10px}
 
-  .panel{
-    display:grid;
-    grid-template-columns:1fr 1.1fr;
-    gap:8px 15px;
-    padding:16px;
+  .task .equation{
+    font-size:clamp(12px,3.2vw,18px);
+    letter-spacing:-.6px;
   }
 
-  .panel h2{font-size:18px;margin:0}
-
-  .instruction{
-    grid-column:1;
-    margin:0;
-    font-size:12px;
-  }
-
-  .current{
-    grid-column:1;
-    margin:0;
-    padding:8px;
-  }
-
-  .keypad{
-    grid-column:2;
-    grid-row:1 / 5;
-    gap:6px;
-  }
-
-  .key{height:38px;font-size:21px}
-
-  .open{
-    grid-column:1;
-    margin:0;
-    padding:11px 3px;
-    font-size:14px;
-    align-self:end;
-  }
-
-  .status{
-    grid-column:1 / -1;
-    margin:5px 0 0;
-    min-height:20px;
-  }
-
-  .task{
-    padding:9px 0 11px;
-    border-radius:12px;
-  }
-
-  .task .equation{font-size:18px}
-  .task .label{font-size:9px;margin-bottom:6px}
+  .task .label{font-size:8px;margin-bottom:6px}
   .help-content{font-size:13px}
+  .status{font-size:12px}
 }
 
 @media(prefers-reduced-motion:reduce){
@@ -820,15 +735,7 @@ h1{
 <main class="app" aria-label="Математическая игра">
 
   <header class="top">
-    <div class="brand">
-      <span class="brand-icon" aria-hidden="true">⚓</span>
-      <div>
-        <h1>Кролик-пират и секрет сундука</h1>
-        <p class="subtitle">
-          Реши пять примеров — собери секретный код!
-        </p>
-      </div>
-    </div>
+    <p class="subtitle">Уровень 1 из 5</p>
 
     <div class="header-actions">
       <details class="help" id="help">
@@ -842,15 +749,18 @@ h1{
           </p>
 
           <p>
-            Выбери пример или окошко сундука и введи ответ.
-            Когда все пять цифр готовы, нажми «Открыть сундук».
+            Выбери пример или окошко сундука
+            и нажми нужную цифру справа.
+            Когда все пять цифр готовы,
+            нажми кнопку с замочком справа.
             Красные окошки подскажут,
             какие ответы нужно исправить.
           </p>
 
           <p>
             Дождись, пока кролик заберёт подарок,
-            затем нажми «Следующий уровень».
+            затем нажми стрелку справа,
+            чтобы перейти на следующий уровень.
             После пятого уровня тебя ждёт вся коллекция!
           </p>
 
@@ -875,7 +785,6 @@ h1{
     <section class="adventure" aria-label="Остров с сундуком">
       <div class="scene" id="scene">
 
-        <!-- Фон находится непосредственно в images -->
         <img
           class="scene-bg"
           src="images/island.png"
@@ -901,8 +810,7 @@ h1{
               <g class="ear">
                 <ellipse
                   cx="64" cy="65" rx="18" ry="57"
-                  fill="#fff9ed"
-                  stroke="#b8a99a"
+                  fill="#fff9ed" stroke="#b8a99a"
                   stroke-width="3"
                   transform="rotate(-13 64 65)"
                 />
@@ -916,8 +824,7 @@ h1{
               <g class="ear right">
                 <ellipse
                   cx="115" cy="65" rx="18" ry="57"
-                  fill="#fff9ed"
-                  stroke="#b8a99a"
+                  fill="#fff9ed" stroke="#b8a99a"
                   stroke-width="3"
                   transform="rotate(13 115 65)"
                 />
@@ -930,16 +837,12 @@ h1{
 
               <ellipse
                 cx="135" cy="219" rx="18" ry="17"
-                fill="#fff9ed"
-                stroke="#b8a99a"
-                stroke-width="3"
+                fill="#fff9ed" stroke="#b8a99a" stroke-width="3"
               />
 
               <ellipse
                 cx="90" cy="214" rx="43" ry="47"
-                fill="#fff9ed"
-                stroke="#b8a99a"
-                stroke-width="3"
+                fill="#fff9ed" stroke="#b8a99a" stroke-width="3"
               />
 
               <path
@@ -949,14 +852,12 @@ h1{
 
               <path
                 d="M55 197h70m-70 15h70m-70 14h70"
-                stroke="#fff3dc"
-                stroke-width="8"
+                stroke="#fff3dc" stroke-width="8"
               />
 
               <path
                 d="M70 180l38 56"
-                stroke="#5b4943"
-                stroke-width="12"
+                stroke="#5b4943" stroke-width="12"
               />
 
               <rect
@@ -976,37 +877,29 @@ h1{
 
               <ellipse
                 cx="90" cy="133" rx="57" ry="53"
-                fill="#fff9ed"
-                stroke="#b8a99a"
-                stroke-width="3"
+                fill="#fff9ed" stroke="#b8a99a" stroke-width="3"
               />
 
               <path
                 d="M30 112Q43 99 52 75Q85 92 126 74Q138 100 153 111Q94 124 30 112Z"
-                fill="#394c54"
-                stroke="#293c44"
-                stroke-width="4"
+                fill="#394c54" stroke="#293c44" stroke-width="4"
               />
 
               <path
                 d="M40 110Q94 119 143 109"
-                fill="none"
-                stroke="#e5ba64"
-                stroke-width="4"
+                fill="none" stroke="#e5ba64" stroke-width="4"
               />
 
               <path
                 d="M87 98l12 11m-12 0l12-11"
-                stroke="#f9ead0"
-                stroke-width="3"
+                stroke="#f9ead0" stroke-width="3"
               />
 
               <circle cx="93" cy="94" r="5" fill="#f9ead0"/>
 
               <path
                 d="M43 126l89 20"
-                stroke="#4b4643"
-                stroke-width="4"
+                stroke="#4b4643" stroke-width="4"
               />
 
               <ellipse
@@ -1039,26 +932,22 @@ h1{
 
               <path
                 d="M90 159v6m0-1q-10 9-17-1m17 1q10 9 17-1"
-                fill="none"
-                stroke="#8c7365"
-                stroke-width="2.5"
-                stroke-linecap="round"
+                fill="none" stroke="#8c7365"
+                stroke-width="2.5" stroke-linecap="round"
               />
 
               <g class="held"></g>
 
               <ellipse
                 cx="53" cy="211" rx="13" ry="23"
-                fill="#fff9ed"
-                stroke="#b8a99a"
+                fill="#fff9ed" stroke="#b8a99a"
                 stroke-width="3"
                 transform="rotate(-20 53 211)"
               />
 
               <ellipse
                 cx="124" cy="211" rx="13" ry="23"
-                fill="#fff9ed"
-                stroke="#b8a99a"
+                fill="#fff9ed" stroke="#b8a99a"
                 stroke-width="3"
                 transform="rotate(35 124 211)"
               />
@@ -1069,7 +958,6 @@ h1{
 
         <!-- Сундук -->
         <div class="chest">
-
           <img
             class="chest-layer chest-back"
             src="images/chest/back.png"
@@ -1078,7 +966,6 @@ h1{
             draggable="false"
           >
 
-          <!-- Новая деталь -->
           <img
             class="chest-layer lid-open"
             src="images/chest/lid-open.png"
@@ -1115,7 +1002,6 @@ h1{
             role="group"
             aria-label="Пять цифр кода"
           ></div>
-
         </div>
 
         <div
@@ -1132,43 +1018,46 @@ h1{
         role="group"
         aria-label="Пять примеров"
       ></div>
-
     </section>
 
-    <section class="panel" aria-label="Панель ввода ответа">
-
-      <h2>Секретный код</h2>
-
-      <p class="instruction">
-        Выбери пример. Реши его и нажми нужную цифру.
-      </p>
-
-      <div class="current">
-        <small id="current-label">Цифра 1 из 5</small>
-        <strong id="current-equation"></strong>
-      </div>
-
+    <!-- Узкая панель справа -->
+    <aside class="panel" aria-label="Цифры для ответа">
       <div
         class="keypad"
         id="keypad"
         role="group"
-        aria-label="Цифры для ввода"
+        aria-label="Цифры от нуля до девяти"
       ></div>
 
-      <button class="open" id="check" type="button" disabled>
-        Открыть сундук
-      </button>
+      <div class="rail-actions">
+        <button
+          class="key delete"
+          id="erase"
+          type="button"
+          aria-label="Стереть выбранную цифру"
+          title="Стереть выбранную цифру"
+        >⌫</button>
 
-      <p
-        class="status"
-        id="status"
-        role="status"
-        aria-live="polite"
-        aria-atomic="true"
-      ></p>
+        <button
+          class="open"
+          id="check"
+          type="button"
+          aria-label="Открыть сундук"
+          title="Открыть сундук"
+          disabled
+        ></button>
+      </div>
+    </aside>
 
-    </section>
   </div>
+
+  <p
+    class="status"
+    id="status"
+    role="status"
+    aria-live="polite"
+    aria-atomic="true"
+  ></p>
 
   <footer class="bottom">
     <span class="badge">Найдено подарков: 0 из 5</span>
@@ -1199,6 +1088,48 @@ const keypad = $('keypad');
 
 const giftInChest = document.querySelector('.treasure svg');
 const giftInPaws = document.querySelector('.held');
+
+// Символы для маленькой кнопки.
+const icon = body => `
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2.1"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >${body}</svg>
+`;
+
+const ICONS = {
+  lock:icon(
+    '<rect x="5" y="10" width="14" height="11" rx="3"/>' +
+    '<path d="M8 10V7a4 4 0 0 1 8 0v3"/>' +
+    '<path d="M12 14v3"/>'
+  ),
+
+  wait:icon(
+    '<path d="M7 3h10M7 21h10M8 3v5l8 8v5M16 3v5l-8 8v5"/>'
+  ),
+
+  next:icon(
+    '<path d="M4 12h16M13 5l7 7-7 7"/>'
+  ),
+
+  restart:icon(
+    '<path d="M20 11a8 8 0 1 1-2.4-5.7M20 3v6h-6"/>'
+  )
+};
+
+function setActionIcon(kind,label){
+  const button = $('check');
+
+  button.innerHTML = ICONS[kind];
+  button.setAttribute('aria-label',label);
+  button.setAttribute('title',label);
+  button.setAttribute('data-action',kind);
+}
 
 // Пять уровней — пять подарков.
 const gifts = [
@@ -1320,8 +1251,10 @@ const gifts = [
 ];
 
 const levelBar = document.createElement('div');
+
 levelBar.id = 'level-bar';
 levelBar.setAttribute('aria-label','Уровни и найденные подарки');
+
 document.querySelector('.adventure').append(levelBar);
 
 let level = 0;
@@ -1336,6 +1269,8 @@ const randomInt = (min,max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
+// Примеры в пределах 10.
+// Ответы — одна цифра от 0 до 9.
 function makeExamples(){
   const pool = [];
 
@@ -1449,7 +1384,6 @@ function startLevel(){
   phase = 'playing';
   checked = false;
 
-  // Новый уровень сразу начинается с закрытого сундука.
   scene.className = 'scene resetting';
   void scene.offsetWidth;
   scene.classList.remove('resetting');
@@ -1464,8 +1398,7 @@ function startLevel(){
   $('new-game').disabled = false;
 
   document.querySelector('.subtitle').textContent =
-    `Уровень ${level + 1} из ${gifts.length} · ` +
-    'Реши пять примеров и открой сундук!';
+    `Уровень ${level + 1} из ${gifts.length}`;
 
   document.querySelector('.badge').textContent =
     `Найдено подарков: ${level} из ${gifts.length}`;
@@ -1517,6 +1450,7 @@ function startLevel(){
   });
 
   setStatus('Введи пять цифр, чтобы проверить код.');
+
   renderCollection();
   render();
 }
@@ -1575,26 +1509,29 @@ function render(){
     );
   });
 
-  $('current-label').textContent = playing
-    ? `Цифра ${selected + 1} из 5`
-    : 'Код разгадан!';
-
-  $('current-equation').textContent = playing
-    ? `${equation(examples[selected])} = ?`
-    : answers.join(' ');
-
   const button = $('check');
 
+  button.classList.toggle(
+    'waiting',
+    phase === 'opening'
+  );
+
   if(playing){
-    button.textContent = 'Открыть сундук';
-    button.disabled = answers.some(answer => answer === null);
+    setActionIcon('lock','Открыть сундук');
+
+    button.disabled = answers.some(
+      answer => answer === null
+    );
   } else if(phase === 'opening'){
-    button.textContent = 'Кролик забирает подарок…';
+    setActionIcon('wait','Кролик забирает подарок');
     button.disabled = true;
   } else {
-    button.textContent = level < gifts.length - 1
-      ? 'Следующий уровень →'
-      : 'Играть сначала ↻';
+    const final = level === gifts.length - 1;
+
+    setActionIcon(
+      final ? 'restart' : 'next',
+      final ? 'Играть сначала' : 'Следующий уровень'
+    );
 
     button.disabled = false;
   }
@@ -1602,6 +1539,8 @@ function render(){
   for(const key of keypad.children){
     key.disabled = !playing;
   }
+
+  $('erase').disabled = !playing;
 }
 
 function enterDigit(digit){
@@ -1628,7 +1567,7 @@ function enterDigit(digit){
 
   setStatus(
     answers.every(answer => answer !== null)
-      ? 'Код готов! Нажми «Открыть сундук».'
+      ? 'Код готов! Нажми на замочек справа.'
       : 'Продолжай! Реши следующий пример.'
   );
 
@@ -1667,7 +1606,8 @@ function checkCode(){
   if(wrong.length){
     selected = wrong[0];
 
-    $('speech').textContent = 'Почти! Проверим ещё раз?';
+    $('speech').textContent =
+      'Почти! Проверим ещё раз?';
 
     setStatus(
       `Проверь ${
@@ -1709,7 +1649,9 @@ function checkCode(){
 
   later(() => {
     scene.classList.add('carrying');
-    $('speech').textContent = 'Забираю подарок в коллекцию!';
+
+    $('speech').textContent =
+      'Забираю подарок в коллекцию!';
   },2350);
 
   later(() => {
@@ -1800,44 +1742,31 @@ function primaryAction(){
   startLevel();
 }
 
-// Экранная клавиатура.
-for(const value of [1,2,3,4,5,6,7,8,9,0,'delete']){
+// Цифры строго сверху вниз: 0, 1, 2, ... 9.
+for(const value of [0,1,2,3,4,5,6,7,8,9]){
   const key = document.createElement('button');
 
   key.type = 'button';
-
-  key.className =
-    'key' +
-    (value === 0
-      ? ' zero'
-      : value === 'delete'
-        ? ' delete'
-        : '');
-
-  key.textContent = value === 'delete' ? '⌫' : value;
+  key.className = 'key';
+  key.textContent = value;
 
   key.setAttribute(
     'aria-label',
-    value === 'delete'
-      ? 'Стереть выбранную цифру'
-      : `Ввести ${value}`
+    `Ввести ${value}`
   );
 
   key.addEventListener('click',() => {
-    if(value === 'delete'){
-      eraseDigit();
-    } else {
-      enterDigit(value);
-    }
+    enterDigit(value);
   });
 
   keypad.append(key);
 }
 
+$('erase').addEventListener('click',eraseDigit);
 $('check').addEventListener('click',primaryAction);
 $('new-game').addEventListener('click',restartGame);
 
-// Обычная клавиатура.
+// Управление клавиатурой.
 document.addEventListener('keydown',event => {
   if($('help').open){
     if(event.key === 'Escape'){
@@ -1849,7 +1778,13 @@ document.addEventListener('keydown',event => {
     return;
   }
 
-  if(event.ctrlKey || event.metaKey || event.altKey) return;
+  if(
+    event.ctrlKey ||
+    event.metaKey ||
+    event.altKey
+  ){
+    return;
+  }
 
   if(
     event.key === 'Enter' &&
@@ -1893,7 +1828,7 @@ document.addEventListener('click',event => {
   }
 });
 
-// Проверка загрузки картинок.
+// Проверка картинок.
 const missingAssets = new Set();
 
 for(const img of document.querySelectorAll('img[data-asset]')){
