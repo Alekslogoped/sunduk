@@ -7,17 +7,8 @@
 <title>Кролик-пират и секрет сундука</title>
 
 <style>
-:root{
-  --ink:#25434b;
-  --muted:#5d767c;
-  --teal:#187e77;
-  --cream:#fff9eb;
-  --bad:#b74b51;
-  --good:#287653;
-}
-
+:root{--ink:#25434b;--muted:#5d767c;--teal:#187e77;--cream:#fff9eb;--bad:#b74b51;--good:#287653}
 *{box-sizing:border-box}
-
 html{width:100%;height:100%}
 
 body{
@@ -47,7 +38,7 @@ summary:focus-visible{
   outline-offset:4px;
 }
 
-/* Игра вписывается в ширину и высоту окна */
+/* Игра вписывается в окно */
 .app{
   position:relative;
   width:min(1280px,100%,calc((100vh - 16px)*16/9));
@@ -57,6 +48,7 @@ summary:focus-visible{
 }
 
 .scene{
+  container-type:inline-size;
   position:relative;
   width:100%;
   aspect-ratio:16/9;
@@ -182,8 +174,8 @@ summary:focus-visible{
 .speech{
   position:absolute;
   left:15%;
-  top:15%;
-  width:29%;
+  top:10%;
+  width:34%;
   background:#fffffff0;
   border:1px solid #d8e9e5;
   border-radius:18px 18px 18px 4px;
@@ -195,13 +187,13 @@ summary:focus-visible{
   box-shadow:0 3px 0 #7195910e;
 }
 
-/* Заяц */
+/* Увеличенный заяц рядом с сундуком */
 .rabbit{
   position:absolute;
-  width:19%;
+  width:22%;
   aspect-ratio:1060/1484;
-  bottom:25%;
-  left:17%;
+  bottom:28%;
+  left:24%;
   z-index:6;
   transition:left 1.2s ease-in-out;
   pointer-events:none;
@@ -265,12 +257,12 @@ summary:focus-visible{
 
 .resetting .rabbit{transition:none!important}
 
-/* Сундук */
+/* Уменьшенный сундук */
 .chest{
   position:absolute;
-  left:43%;
-  top:22%;
-  width:39%;
+  left:45%;
+  top:24%;
+  width:35%;
   aspect-ratio:4/3;
   perspective:1000px;
   z-index:4;
@@ -322,7 +314,7 @@ summary:focus-visible{
   transition:none!important;
 }
 
-/* Код на сундуке */
+/* Пять окошек кода */
 .code{
   position:absolute;
   left:17%;
@@ -415,40 +407,67 @@ summary:focus-visible{
 .carrying .treasure{opacity:0}
 .carrying .held{opacity:1}
 
-.approaching .rabbit{left:35%}
-.returning .rabbit{left:17%}
+.approaching .rabbit{left:36%}
+.returning .rabbit{left:24%}
 .scene.shake .chest{animation:shake .5s}
 
-/* Небольшие плашки примеров по центру */
+/* Квадратные плашки с одинаковыми промежутками */
 .tasks{
   position:absolute;
   left:50%;
   transform:translateX(-50%);
-  bottom:8%;
-  width:68%;
-  max-width:790px;
-  height:clamp(52px,10%,66px);
+  bottom:4%;
+  width:72%;
+  max-width:720px;
   display:grid;
   grid-template-columns:repeat(5,minmax(0,1fr));
-  gap:7px;
+  gap:clamp(8px,1.7vw,22px);
+  gap:clamp(8px,1.7cqw,22px);
   margin:0;
   z-index:10;
 }
 
 .task{
+  position:relative;
+  display:block;
+  aspect-ratio:1/1;
+  width:100%;
+  min-width:0;
+  padding:0;
+  border:0;
+  border-radius:12px;
+  background:transparent;
+  isolation:isolate;
+  box-shadow:none;
+  -webkit-backdrop-filter:none;
+  backdrop-filter:none;
+}
+
+.task-bg{
+  position:absolute;
+  inset:0;
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  pointer-events:none;
+  user-select:none;
+  z-index:0;
+  filter:drop-shadow(0 3px 3px #62432124);
+}
+
+/* Текст находится в светлой внутренней части картинки */
+.task-content{
+  position:absolute;
+  inset:17% 14%;
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
-  gap:2px;
-  padding:3px 2px;
-  border:2px solid #ffffffb3;
-  background:#fffcf1d9;
-  border-radius:12px;
+  gap:4px;
   min-width:0;
-  box-shadow:0 4px 12px #355b4b20;
-  backdrop-filter:blur(9px);
-  -webkit-backdrop-filter:blur(9px);
+  z-index:1;
+  pointer-events:none;
 }
 
 .task .label{
@@ -456,7 +475,8 @@ summary:focus-visible{
   line-height:1.1;
   font-size:clamp(8px,1vw,13px);
   letter-spacing:.5px;
-  color:var(--muted);
+  color:#76624c;
+  white-space:nowrap;
 }
 
 .task .equation{
@@ -466,20 +486,52 @@ summary:focus-visible{
   font-weight:bold;
   white-space:nowrap;
   letter-spacing:-.6px;
+  word-spacing:-.08em;
+  color:#31434a;
+  transform:scaleX(var(--equation-scale,1));
+  transform-origin:center;
 }
 
-.task.active{
-  border-color:var(--teal);
-  background:#f7fffbed;
-  box-shadow:0 0 0 2px #ffffff85,0 4px 12px #355b4b20;
+.task::after{
+  content:"";
+  position:absolute;
+  inset:7%;
+  border:2px solid transparent;
+  border-radius:12%;
+  pointer-events:none;
+  z-index:2;
 }
 
-.task.filled .label::after{content:" •";color:var(--teal)}
-.task.wrong{border-color:#ce7370;background:#fff1edeb}
-.task.correct{border-color:#70aa7d;background:#f0faedeb}
+.task.active::after{
+  border-color:#228f83;
+  box-shadow:inset 0 0 0 1px #ffffffa8,0 0 9px #31a99e66;
+}
+
+.task:hover:enabled .task-bg{
+  filter:drop-shadow(0 4px 5px #62432138) brightness(1.03);
+}
+
+.task.filled .label::after{
+  content:" •";
+  color:var(--teal);
+}
+
+.task.wrong::after{
+  border-color:#bd4c4c;
+  box-shadow:0 0 9px #bd4c4c66;
+}
+
+.task.wrong .equation{color:#a93434}
+
+.task.correct::after{
+  border-color:#4c965c;
+  box-shadow:0 0 8px #4c965c44;
+}
+
+.task.correct .equation{color:#287653}
 .task:disabled{opacity:1}
 
-/* Компактная коллекция слева */
+/* Коллекция слева */
 .collection{
   position:absolute;
   top:20%;
@@ -558,7 +610,7 @@ summary:focus-visible{
 
 .level-gift>span:last-child{white-space:nowrap}
 
-/* Цифры внутри фона справа */
+/* Цифры справа */
 .panel{
   position:absolute;
   right:1.8%;
@@ -650,12 +702,12 @@ summary:focus-visible{
 
 .open.waiting svg{animation:waiting 1s ease-in-out infinite}
 
-/* Подсказка тоже на фоне */
+/* Сообщения */
 .status{
   position:absolute;
   left:13%;
   right:10%;
-  bottom:1.5%;
+  bottom:.2%;
   font-size:13px;
   line-height:1.35;
   min-height:18px;
@@ -688,7 +740,7 @@ summary:focus-visible{
   overflow-wrap:anywhere;
 }
 
-/* Конфетти */
+/* Конфетти и анимации */
 .confetti{
   position:absolute;
   inset:0;
@@ -708,48 +760,15 @@ summary:focus-visible{
   animation-delay:var(--delay);
 }
 
-/* Анимации */
-@keyframes waiting{
-  50%{opacity:.35}
-}
-
-@keyframes idleFrame{
-  0%,34%,76%,100%{opacity:1}
-  32%,70%{opacity:0}
-}
-
-@keyframes blinkFrame{
-  0%,34%,100%{opacity:0}
-  32%{opacity:1}
-}
-
-@keyframes earsFrame{
-  0%,76%,100%{opacity:0}
-  70%{opacity:1}
-}
-
-@keyframes walkBob{
-  0%,100%{transform:translateY(0) rotate(-1deg)}
-  50%{transform:translateY(-4px) rotate(1deg)}
-}
-
-@keyframes bob{
-  0%,100%{transform:translateY(0)}
-  50%{transform:translateY(-2px)}
-}
-
-@keyframes shake{
-  20%,60%{transform:translateX(-6px)}
-  40%,80%{transform:translateX(6px)}
-}
-
-@keyframes celebrate{
-  50%{transform:translateY(-14px)}
-}
-
-@keyframes fall{
-  to{transform:translateY(500px) rotate(650deg);opacity:0}
-}
+@keyframes waiting{50%{opacity:.35}}
+@keyframes idleFrame{0%,34%,76%,100%{opacity:1}32%,70%{opacity:0}}
+@keyframes blinkFrame{0%,34%,100%{opacity:0}32%{opacity:1}}
+@keyframes earsFrame{0%,76%,100%{opacity:0}70%{opacity:1}}
+@keyframes walkBob{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-4px) rotate(1deg)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
+@keyframes shake{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+@keyframes celebrate{50%{transform:translateY(-14px)}}
+@keyframes fall{to{transform:translateY(500px) rotate(650deg);opacity:0}}
 
 /* Средние окна */
 @media(max-width:850px){
@@ -765,8 +784,8 @@ summary:focus-visible{
   .code{gap:2px;padding:3px}
   .slot{font-size:23px}
   .slot-number{font-size:9px;bottom:-15px}
-  .tasks{gap:5px}
   .task{border-radius:10px}
+  .task-content{gap:3px}
   .task .equation{font-size:clamp(16px,2.6vw,23px)}
   .task .label{font-size:9px;letter-spacing:0}
   .collection{padding:3px}
@@ -801,8 +820,9 @@ summary:focus-visible{
   .code{padding:2px;gap:2px;border-width:1px}
   .slot.active{outline-width:2px}
   .slot-number{font-size:7px;bottom:-12px}
-  .tasks{gap:4px}
-  .task{padding:2px 0;border-radius:8px;border-width:1px}
+  .tasks{gap:clamp(6px,1.7cqw,10px)}
+  .task{border-radius:8px}
+  .task-content{gap:2px}
   .task .equation{font-size:clamp(11px,2.7vw,16px);letter-spacing:-.5px}
   .task .label{font-size:7px}
   .level-gift{font-size:7px;border-radius:7px}
@@ -812,7 +832,7 @@ summary:focus-visible{
   .status{font-size:10px}
 }
 
-/* Портретное окно */
+/* Портретный формат */
 @media(max-aspect-ratio:4/5){
   .app{
     width:min(100%,calc((100vh - 16px)*3/4));
@@ -830,10 +850,10 @@ summary:focus-visible{
 
   .header-actions{margin-left:auto}
   .speech{left:16%;top:14%;width:68%}
-  .rabbit{left:14%;width:28%;bottom:33%}
+  .rabbit{left:18%;width:32%;bottom:33%}
   .approaching .rabbit{left:30%}
-  .returning .rabbit{left:14%}
-  .chest{left:41%;top:31%;width:46%}
+  .returning .rabbit{left:18%}
+  .chest{left:43%;top:36%;width:42%}
 
   .collection{
     left:2%;
@@ -916,13 +936,7 @@ summary:focus-visible{
       </div>
     </header>
 
-    <img
-      class="scene-bg"
-      src="images/island.png"
-      alt=""
-      data-asset
-      draggable="false"
-    >
+    <img class="scene-bg" src="images/island.png" alt="" data-asset draggable="false">
 
     <div class="speech" id="speech">
       Поможешь мне открыть сундук?
@@ -936,14 +950,7 @@ summary:focus-visible{
         <img class="rabbit-frame rabbit-happy" src="images/rabbit/happy.png" alt="" data-asset draggable="false">
         <img class="rabbit-frame rabbit-carry" src="images/rabbit/carry.png" alt="" data-asset draggable="false">
 
-        <img
-          class="held"
-          id="gift-in-paws"
-          src="images/gifts/carrot.png"
-          alt=""
-          data-asset
-          draggable="false"
-        >
+        <img class="held" id="gift-in-paws" src="images/gifts/carrot.png" alt="" data-asset draggable="false">
       </div>
     </div>
 
@@ -955,48 +962,26 @@ summary:focus-visible{
       <div class="shine"></div>
 
       <div class="treasure" aria-hidden="true">
-        <img
-          class="gift-image"
-          id="gift-in-chest"
-          src="images/gifts/carrot.png"
-          alt=""
-          data-asset
-          draggable="false"
-        >
+        <img class="gift-image" id="gift-in-chest" src="images/gifts/carrot.png" alt="" data-asset draggable="false">
       </div>
 
       <img class="chest-layer lid" src="images/chest/lid.png" alt="" data-asset draggable="false">
 
       <img class="chest-layer chest-front" src="images/chest/front.png" alt="" data-asset draggable="false">
 
-      <div
-        class="code"
-        id="code"
-        role="group"
-        aria-label="Пять цифр кода"
-      ></div>
+      <div class="code" id="code" role="group" aria-label="Пять цифр кода"></div>
     </div>
 
     <div class="confetti" id="confetti" aria-hidden="true"></div>
 
-    <div
-      class="tasks"
-      id="tasks"
-      role="group"
-      aria-label="Пять примеров"
-    ></div>
+    <div class="tasks" id="tasks" role="group" aria-label="Пять примеров"></div>
 
     <aside class="collection" aria-label="Коллекция подарков">
       <div id="level-bar" aria-label="Уровни и найденные подарки"></div>
     </aside>
 
     <aside class="panel" aria-label="Цифры для ответа">
-      <div
-        class="keypad"
-        id="keypad"
-        role="group"
-        aria-label="Цифры от нуля до девяти"
-      ></div>
+      <div class="keypad" id="keypad" role="group" aria-label="Цифры от нуля до девяти"></div>
 
       <div class="rail-actions">
         <button
@@ -1018,21 +1003,9 @@ summary:focus-visible{
       </div>
     </aside>
 
-    <p
-      class="status"
-      id="status"
-      role="status"
-      aria-live="polite"
-      aria-atomic="true"
-    ></p>
+    <p class="status" id="status" role="status" aria-live="polite" aria-atomic="true"></p>
 
-    <p
-      id="asset-warning"
-      class="asset-warning"
-      role="status"
-      hidden
-    ></p>
-
+    <p id="asset-warning" class="asset-warning" role="status" hidden></p>
   </section>
 
   <noscript>Для игры включите JavaScript в браузере.</noscript>
@@ -1052,6 +1025,9 @@ const levelBar = $('level-bar');
 
 const giftInChest = $('gift-in-chest');
 const giftInPaws = $('gift-in-paws');
+
+// Плашка загружена именно в папку images.
+const TASK_PANEL = 'images/task-panel.png';
 
 function setRabbitState(state) {
   rabbit.setAttribute('data-state', state);
@@ -1098,7 +1074,6 @@ function setActionIcon(kind, label) {
   button.setAttribute('data-action', kind);
 }
 
-// Пять уровней — пять подарков.
 const gifts = [
   {
     name: 'Золотая морковка',
@@ -1139,21 +1114,11 @@ function makeExamples() {
   for (let a = 0; a <= 10; a++) {
     for (let b = 1; b <= 9; b++) {
       if (a + b <= 9) {
-        pool.push({
-          a,
-          b,
-          sign: '+',
-          result: a + b
-        });
+        pool.push({ a, b, sign: '+', result: a + b });
       }
 
       if (a >= b && a - b <= 9) {
-        pool.push({
-          a,
-          b,
-          sign: '−',
-          result: a - b
-        });
+        pool.push({ a, b, sign: '−', result: a - b });
       }
     }
   }
@@ -1260,7 +1225,6 @@ function startLevel() {
   phase = 'playing';
   checked = false;
 
-  // Сбрасываем анимации и закрываем сундук.
   scene.className = 'scene resetting';
   void scene.offsetWidth;
   scene.classList.remove('resetting');
@@ -1281,7 +1245,6 @@ function startLevel() {
   document.querySelector('.badge').textContent =
     `Найдено подарков: ${level} из ${gifts.length}`;
 
-  // Один и тот же подарок в сундуке и в лапках.
   giftInChest.setAttribute('src', gifts[level].image);
   giftInPaws.setAttribute('src', gifts[level].image);
 
@@ -1306,9 +1269,18 @@ function startLevel() {
     task.type = 'button';
     task.className = 'task';
 
-    task.innerHTML =
-      `<span class="label">Цифра ${index + 1}</span>` +
-      `<span class="equation">${equation(example)}</span>`;
+    task.innerHTML = `
+      <img
+        class="task-bg"
+        src="${TASK_PANEL}"
+        alt=""
+        draggable="false"
+      >
+      <span class="task-content">
+        <span class="label">Цифра ${index + 1}</span>
+        <span class="equation">${equation(example)}</span>
+      </span>
+    `;
 
     task.setAttribute(
       'aria-label',
@@ -1322,6 +1294,32 @@ function startLevel() {
   setStatus('Введи пять цифр, чтобы проверить код.');
   renderCollection();
   render();
+
+  if (typeof requestAnimationFrame === 'function') {
+    requestAnimationFrame(fitTaskText);
+  }
+}
+
+// Сохраняет высоту цифр и вписывает длинную строку в светлый центр.
+function fitTaskText() {
+  for (const task of tasks.children) {
+    const content = task.querySelector('.task-content');
+    const text = task.querySelector('.equation');
+
+    if (!content || !text) continue;
+
+    text.style.setProperty('--equation-scale', '1');
+
+    const available = content.clientWidth - 2;
+    const needed = text.scrollWidth;
+
+    if (available > 0 && needed > 0) {
+      text.style.setProperty(
+        '--equation-scale',
+        String(Math.min(1, available / needed))
+      );
+    }
+  }
 }
 
 function restartGame() {
@@ -1436,10 +1434,7 @@ function eraseDigit() {
   answers[selected] = null;
   checked = false;
 
-  setStatus(
-    `Введи новый ответ для цифры ${selected + 1}.`
-  );
-
+  setStatus(`Введи новый ответ для цифры ${selected + 1}.`);
   render();
 }
 
@@ -1480,11 +1475,9 @@ function checkCode() {
   scene.classList.add('opened');
 
   $('new-game').disabled = true;
-
   setRabbitState('happy');
 
-  $('speech').textContent =
-    `Ура! ${gifts[level].name}!`;
+  $('speech').textContent = `Ура! ${gifts[level].name}!`;
 
   setStatus(
     `Сундук открыт! Внутри — ${gifts[level].name.toLowerCase()}.`,
@@ -1493,22 +1486,17 @@ function checkCode() {
 
   render();
 
-  // Радуется и подходит к сундуку.
   later(() => {
     setRabbitState('walk');
     scene.classList.add('approaching');
   }, 1000);
 
-  // Берёт подарок.
   later(() => {
     setRabbitState('carry');
     scene.classList.add('carrying');
-
-    $('speech').textContent =
-      'Забираю подарок в коллекцию!';
+    $('speech').textContent = 'Забираю подарок в коллекцию!';
   }, 2350);
 
-  // Возвращается с подарком.
   later(() => {
     scene.classList.add('returning');
   }, 2900);
@@ -1588,7 +1576,6 @@ function primaryAction() {
   startLevel();
 }
 
-// Цифры 0–9.
 for (const value of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]) {
   const key = document.createElement('button');
 
@@ -1597,10 +1584,7 @@ for (const value of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]) {
   key.textContent = value;
 
   key.setAttribute('aria-label', `Ввести ${value}`);
-
-  key.addEventListener('click', () => {
-    enterDigit(value);
-  });
+  key.addEventListener('click', () => enterDigit(value));
 
   keypad.append(key);
 }
@@ -1609,7 +1593,6 @@ $('erase').addEventListener('click', eraseDigit);
 $('check').addEventListener('click', primaryAction);
 $('new-game').addEventListener('click', restartGame);
 
-// Управление клавиатурой.
 document.addEventListener('keydown', event => {
   if ($('help').open) {
     if (event.key === 'Escape') {
@@ -1656,7 +1639,6 @@ document.addEventListener('keydown', event => {
   }
 });
 
-// Закрытие правил щелчком снаружи.
 document.addEventListener('click', event => {
   const help = $('help');
 
@@ -1705,7 +1687,7 @@ for (const img of document.querySelectorAll('img[data-asset]')) {
   watchAsset(img);
 }
 
-// Предварительно загружаем все пять подарков.
+// Предварительная загрузка подарков.
 const giftPreloads = gifts.map(gift => {
   const image = document.createElement('img');
 
@@ -1714,6 +1696,25 @@ const giftPreloads = gifts.map(gift => {
 
   return image;
 });
+
+// Предварительная загрузка квадратной плашки.
+const panelPreload = document.createElement('img');
+panelPreload.setAttribute('src', TASK_PANEL);
+watchAsset(panelPreload);
+
+// Вписываем примеры при изменении размера окна.
+const taskResizeObserver =
+  typeof ResizeObserver === 'function'
+    ? new ResizeObserver(fitTaskText)
+    : null;
+
+if (taskResizeObserver) {
+  taskResizeObserver.observe(tasks);
+}
+
+if (document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(fitTaskText);
+}
 
 restartGame();
 </script>
