@@ -81,7 +81,7 @@ button:focus-visible,summary:focus-visible{outline:4px solid #387fe1;outline-off
 .confetti{position:absolute;inset:0;pointer-events:none;z-index:9}
 .confetti i{position:absolute;top:-12px;width:9px;height:15px;border-radius:3px;animation:fall 2.6s ease-in both;left:var(--x);background:var(--color);animation-delay:var(--delay)}
 
-/* Плашки с примерами */
+/* Примеры */
 .tasks{position:absolute;left:50%;transform:translateX(-50%);bottom:4%;width:72%;max-width:720px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:clamp(8px,1.7vw,22px);gap:clamp(8px,1.7cqw,22px);margin:0;z-index:10}
 .task{position:relative;display:block;aspect-ratio:1/1;width:100%;min-width:0;padding:0;border:0;border-radius:12px;background:transparent;isolation:isolate;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}
 .task-bg{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:contain;pointer-events:none;user-select:none;z-index:0;filter:drop-shadow(0 3px 3px #62432124)}
@@ -96,19 +96,20 @@ button:focus-visible,summary:focus-visible{outline:4px solid #387fe1;outline-off
 .task.correct .equation{color:#287653}
 .task:disabled{opacity:1}
 
-/* Коллекция подарков */
-.collection{position:absolute;top:20%;left:2%;bottom:22%;width:8%;max-width:96px;padding:5px;border:1px solid #fff9e6c9;border-radius:16px;background:linear-gradient(155deg,#fffdf2b8,#fff2d780);box-shadow:0 8px 24px #3c675b26,inset 0 1px 0 #ffffffb3;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);z-index:10}
-#level-bar{display:flex;flex-direction:column;gap:4px;height:100%}
-.level-gift{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-align:center;border:1px solid #ffffffb3;border-radius:9px;background:#ffffff52;padding:2px;color:#587575;font-size:clamp(7px,.8vw,10px)}
-.level-gift.current{border:2px solid #288b80;background:#fff9eac9;color:#25434b;font-weight:bold;box-shadow:0 2px 8px #35685e12}
-.level-gift.found{border-color:#77a988;background:#f3ffedb8;color:#287653}
+/* Новая плашка уровней */
+.collection{position:absolute;top:20%;left:1.8%;bottom:22%;width:10%;max-width:116px;padding:0;border:0;border-radius:14px;overflow:hidden;isolation:isolate;background:linear-gradient(90deg,#a86428,#fff3d8 14%,#fff3d8 86%,#a86428);z-index:10}
+.collection-bg{position:absolute;left:-18.1%;top:-2.88%;width:136.04%;height:106.29%;max-width:none;object-fit:fill;pointer-events:none;user-select:none;z-index:0}
+#level-bar{position:absolute;inset:8% 14%;display:flex;flex-direction:column;gap:4px;z-index:1}
+.level-gift{flex:1;min-height:0;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-align:center;border:1px solid #d6b779;border-radius:8px;background:linear-gradient(#fffdf3d9,#f7e7c3b3);padding:2px;color:#83643b;font-size:clamp(7px,.8vw,10px);box-shadow:inset 0 1px 0 #ffffffb3}
+.level-gift.current{border:2px solid #299b90;background:linear-gradient(#f3fffa,#d8f4e9);color:#206b61;font-weight:bold;box-shadow:0 0 7px #3bb8a644,inset 0 1px 0 #ffffff}
+.level-gift.found{border-color:#d2a349;background:linear-gradient(#fffbed,#fae4ad);color:#79551e;box-shadow:inset 0 1px 0 #ffffff,0 1px 0 #ad7b3033}
 .level-gift img{display:block;object-fit:contain;width:80%;height:62%;max-width:80%;min-height:0;flex-shrink:1;filter:drop-shadow(0 2px 2px #785a2426)}
-.level-gift .mystery{display:grid;place-items:center;min-height:0;height:62%;font-size:clamp(16px,2.5vw,35px);font-weight:bold;color:#71958a}
-.level-gift>span:last-child{white-space:nowrap}
+.level-gift .mystery{display:grid;place-items:center;min-height:0;height:62%;font-size:clamp(16px,2.5vw,35px);font-weight:bold;color:#b5945b;text-shadow:0 1px 0 #ffffff}
+.level-gift.current .mystery{color:#299b90}
+.level-gift>span:last-child{white-space:nowrap;font-size:clamp(6px,.75vw,10px);line-height:1.1}
 
-/* Новая деревянная панель с цифрами */
+/* Панель цифр */
 .panel{position:absolute;right:1.8%;top:17%;bottom:16%;width:7.4%;max-width:92px;border:0;border-radius:14px;overflow:hidden;isolation:isolate;z-index:10;background:linear-gradient(90deg,#a86428,#fff3d8 18%,#fff3d8 82%,#a86428)}
-/* Убираем прозрачные поля исходной картинки средствами CSS. */
 .keypad-bg{position:absolute;left:-46.84%;top:-1.83%;width:193.25%;height:104.54%;max-width:none;object-fit:fill;pointer-events:none;user-select:none;z-index:0}
 .panel-content{position:absolute;inset:8% 17%;display:flex;flex-direction:column;gap:6px;z-index:1}
 .keypad{flex:1;min-height:0;display:grid;grid-template-columns:1fr;grid-template-rows:repeat(10,minmax(0,1fr));gap:3px}
@@ -158,7 +159,6 @@ button:focus-visible,summary:focus-visible{outline:4px solid #387fe1;outline-off
   .task{border-radius:10px}
   .task-content{gap:3px}
   .task .equation{font-size:clamp(16px,2.6vw,23px)}
-  .collection{padding:3px}
   #level-bar{gap:3px}
   .level-gift{gap:1px;font-size:8px}
   .status{font-size:11px}
@@ -193,6 +193,7 @@ button:focus-visible,summary:focus-visible{outline:4px solid #387fe1;outline-off
   .help-content{font-size:12px}
   .status{font-size:10px}
 }
+
 /* Вертикальное окно */
 @media(max-aspect-ratio:4/5){
   .app{width:min(100%,calc((100vh - 16px)*3/4));width:min(100%,calc((100svh - 16px)*3/4))}
@@ -204,7 +205,8 @@ button:focus-visible,summary:focus-visible{outline:4px solid #387fe1;outline-off
   .approaching .rabbit{left:30%}
   .returning .rabbit{left:18%}
   .chest{left:43%;top:36%;width:42%}
-  .collection{left:2%;top:22%;bottom:28%;width:10%;max-width:none}
+  .collection{left:2%;top:22%;bottom:28%;width:12%;max-width:none}
+  .level-gift>span:last-child{font-size:6px}
   .panel{right:2%;top:20%;bottom:24%;width:11%;max-width:none}
   .panel-content{inset:6% 17%}
   .key{line-height:.9}
@@ -212,6 +214,7 @@ button:focus-visible,summary:focus-visible{outline:4px solid #387fe1;outline-off
   .status{left:13%;right:13%;bottom:3%;font-size:11px}
   .help-content{max-height:45svh}
 }
+
 /* Низкое горизонтальное окно */
 @media(max-height:440px) and (min-aspect-ratio:4/5){
   .panel{width:12%;max-width:none;top:18%;bottom:18%}
@@ -251,7 +254,6 @@ button:focus-visible,summary:focus-visible{outline:4px solid #387fe1;outline-off
     </header>
 
     <img class="scene-bg" src="images/island.png" alt="" data-asset draggable="false">
-
     <div class="speech" id="speech">Поможешь мне открыть сундук?</div>
 
     <div class="rabbit" id="rabbit" data-state="idle" aria-hidden="true">
@@ -281,6 +283,7 @@ button:focus-visible,summary:focus-visible{outline:4px solid #387fe1;outline-off
     <div class="tasks" id="tasks" role="group" aria-label="Пять примеров"></div>
 
     <aside class="collection" aria-label="Коллекция подарков">
+      <img class="collection-bg" src="images/level-panel.png" alt="" data-asset draggable="false">
       <div id="level-bar" aria-label="Уровни и найденные подарки"></div>
     </aside>
 
@@ -343,6 +346,7 @@ function setActionIcon(kind, label) {
   button.setAttribute('data-action', kind);
 }
 
+/* Ровно пять уровней */
 const gifts = [
   { name: 'Золотая морковка', image: 'images/gifts/carrot.png' },
   { name: 'Голубой алмаз', image: 'images/gifts/diamond.png' },
@@ -531,6 +535,7 @@ function startLevel() {
   }
 }
 
+/* Вписываем примеры в плашки */
 function fitTaskText() {
   for (const task of tasks.children) {
     const content = task.querySelector('.task-content');
@@ -843,7 +848,7 @@ document.addEventListener('click', event => {
   }
 });
 
-/* Проверяем картинки */
+/* Проверка загрузки картинок */
 const missingAssets = new Set();
 
 function watchAsset(img) {
@@ -875,7 +880,7 @@ for (const img of document.querySelectorAll('img[data-asset]')) {
   watchAsset(img);
 }
 
-/* Заранее загружаем подарки */
+/* Предзагрузка подарков */
 const giftPreloads = gifts.map(gift => {
   const image = document.createElement('img');
   image.setAttribute('src', gift.image);
