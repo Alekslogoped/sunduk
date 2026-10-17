@@ -5,743 +5,131 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#e9f6f5">
 <title>Кролик-пират и секрет сундука</title>
-
 <style>
-:root{
-  --ink:#25434b;
-  --muted:#5d767c;
-  --teal:#187e77;
-  --cream:#fff9eb;
-  --bad:#b74b51;
-  --good:#287653;
-}
-
+:root{--ink:#25434b;--muted:#5d767c;--teal:#187e77;--cream:#fff9eb;--bad:#b74b51;--good:#287653}
 *{box-sizing:border-box}
-
 html{width:100%;height:100%}
-
-body{
-  margin:0;
-  min-height:100vh;
-  min-height:100svh;
-  padding:8px;
-  display:grid;
-  place-items:center;
-  background:#eaf5f3;
-  color:var(--ink);
-  font-family:ui-rounded,"Trebuchet MS",Arial,sans-serif;
-}
-
-button,summary{
-  font:inherit;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
-}
-
+body{margin:0;min-height:100vh;min-height:100svh;padding:8px;display:grid;place-items:center;background:#eaf5f3;color:var(--ink);font-family:ui-rounded,"Trebuchet MS",Arial,sans-serif}
+button,summary{font:inherit;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 button{color:inherit;cursor:pointer}
 button:disabled{cursor:default}
+button:focus-visible,summary:focus-visible{outline:4px solid #387fe1;outline-offset:4px}
 
-button:focus-visible,
-summary:focus-visible{
-  outline:4px solid #387fe1;
-  outline-offset:4px;
-}
-
-/* Игра помещается в окно */
-.app{
-  position:relative;
-  width:min(1280px,100%,calc((100vh - 16px)*16/9));
-  width:min(1280px,100%,calc((100svh - 16px)*16/9));
-  margin:0;
-  padding:0;
-}
-
-.scene{
-  container-type:inline-size;
-  position:relative;
-  width:100%;
-  aspect-ratio:16/9;
-  background:#b5e6ee;
-  border:3px solid white;
-  border-radius:24px;
-  overflow:hidden;
-  isolation:isolate;
-  box-shadow:0 8px 22px #2d73700b;
-}
-
-.scene-bg{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  z-index:0;
-  pointer-events:none;
-  user-select:none;
-}
-
-/* Кнопки и информация на фоне */
-.top{
-  position:absolute;
-  top:2.5%;
-  left:13%;
-  right:9%;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:8px;
-  margin:0;
-  z-index:30;
-}
-
-.level-info{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  flex-wrap:wrap;
-}
-
-.subtitle{
-  font-size:13px;
-  color:var(--ink);
-  margin:0;
-  font-weight:bold;
-  text-shadow:0 1px 3px #ffffff;
-}
-
-.badge{
-  font-size:10px;
-  color:var(--ink);
-  background:#fffdf0b3;
-  border:1px solid #ffffffb3;
-  border-radius:20px;
-  padding:4px 8px;
-  white-space:nowrap;
-}
-
-.quiet{
-  background:#fffdf0d9;
-  border:1px solid #ffffffcc;
-  border-radius:12px;
-  padding:8px 12px;
-  font-weight:bold;
-  box-shadow:0 2px 8px #25534b12;
-  backdrop-filter:blur(8px);
-  -webkit-backdrop-filter:blur(8px);
-}
-
+/* Игровое поле */
+.app{position:relative;width:min(1280px,100%,calc((100vh - 16px)*16/9));width:min(1280px,100%,calc((100svh - 16px)*16/9));margin:0;padding:0}
+.top{position:absolute;top:2.5%;left:13%;right:9%;display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0;z-index:30}
+.level-info{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.subtitle{font-size:13px;color:var(--ink);margin:0;font-weight:bold;text-shadow:0 1px 3px #ffffff}
+.quiet{background:#fffdf0d9;border:1px solid #ffffffcc;border-radius:12px;padding:8px 12px;font-weight:bold;box-shadow:0 2px 8px #25534b12;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 .quiet:hover{background:#f8fffc}
 .quiet:disabled{opacity:.5}
-
-.header-actions{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  flex-shrink:0;
-  margin-left:auto;
-  position:relative;
-}
-
+.header-actions{display:flex;align-items:center;gap:10px;flex-shrink:0;margin-left:auto;position:relative}
 .help{position:static;z-index:20}
-
-.help summary{
-  display:block;
-  list-style:none;
-  white-space:nowrap;
-  cursor:pointer;
-}
-
+.help summary{display:block;list-style:none;white-space:nowrap;cursor:pointer}
 .help summary::-webkit-details-marker{display:none}
-
-.help[open] summary{
-  background:#fff9eb;
-  border-color:#b8cec6;
-}
-
-.help-content{
-  position:absolute;
-  right:0;
-  top:calc(100% + 10px);
-  width:340px;
-  max-width:calc(100vw - 32px);
-  padding:15px 18px;
-  border:1px solid #cadfda;
-  border-radius:18px;
-  background:#fffdf6;
-  box-shadow:0 12px 34px #25434b26;
-  color:var(--ink);
-  font-size:14px;
-  max-height:min(55svh,320px);
-  overflow:auto;
-  z-index:30;
-}
-
+.help[open] summary{background:#fff9eb;border-color:#b8cec6}
+.help-content{position:absolute;right:0;top:calc(100% + 10px);width:340px;max-width:calc(100vw - 32px);padding:15px 18px;border:1px solid #cadfda;border-radius:18px;background:#fffdf6;box-shadow:0 12px 34px #25434b26;color:var(--ink);font-size:14px;max-height:min(55svh,320px);overflow:auto;z-index:30}
 .help-content p{margin:0 0 10px;line-height:1.55}
 .help-content p:last-child{margin-bottom:0}
 
-/* Реплика зайца */
-.speech{
-  position:absolute;
-  left:15%;
-  top:10%;
-  width:34%;
-  background:#fffffff0;
-  border:1px solid #d8e9e5;
-  border-radius:18px 18px 18px 4px;
-  padding:10px 12px;
-  text-align:center;
-  z-index:8;
-  font-size:clamp(11px,1.45vw,16px);
-  font-weight:bold;
-  box-shadow:0 3px 0 #7195910e;
-}
+.scene{container-type:inline-size;position:relative;width:100%;aspect-ratio:16/9;background:#b5e6ee;border:3px solid white;border-radius:24px;overflow:hidden;isolation:isolate;box-shadow:0 8px 22px #2d73700b}
+.scene-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;pointer-events:none;user-select:none}
+.speech{position:absolute;left:15%;top:10%;width:34%;background:#fffffff0;border:1px solid #d8e9e5;border-radius:18px 18px 18px 4px;padding:10px 12px;text-align:center;z-index:8;font-size:clamp(11px,1.45vw,16px);font-weight:bold;box-shadow:0 3px 0 #7195910e}
 
 /* Заяц */
-.rabbit{
-  position:absolute;
-  width:22%;
-  aspect-ratio:1060/1484;
-  bottom:28%;
-  left:24%;
-  z-index:6;
-  transition:left 1.2s ease-in-out;
-  pointer-events:none;
-}
-
-.rabbit-visual{
-  position:absolute;
-  inset:0;
-  animation:bob 3s ease-in-out infinite;
-}
-
-.rabbit-frame{
-  position:absolute;
-  inset:0;
-  display:block;
-  width:100%;
-  height:100%;
-  object-fit:contain;
-  opacity:0;
-  user-select:none;
-}
-
-.rabbit[data-state="idle"] .rabbit-idle{
-  opacity:1;
-  animation:idleFrame 8s step-end infinite;
-}
-
-.rabbit[data-state="idle"] .rabbit-blink{
-  animation:blinkFrame 8s step-end infinite;
-}
-
-.rabbit[data-state="idle"] .rabbit-ears{
-  animation:earsFrame 8s step-end infinite;
-}
-
+.rabbit{position:absolute;width:22%;aspect-ratio:1060/1484;bottom:28%;left:24%;z-index:6;transition:left 1.2s ease-in-out;pointer-events:none}
+.rabbit-visual{position:absolute;inset:0;animation:bob 3s ease-in-out infinite}
+.rabbit-frame{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:contain;opacity:0;user-select:none}
+.rabbit[data-state="idle"] .rabbit-idle{opacity:1;animation:idleFrame 8s step-end infinite}
+.rabbit[data-state="idle"] .rabbit-blink{animation:blinkFrame 8s step-end infinite}
+.rabbit[data-state="idle"] .rabbit-ears{animation:earsFrame 8s step-end infinite}
 .rabbit[data-state="walk"] .rabbit-idle,
 .rabbit[data-state="happy"] .rabbit-happy,
-.rabbit[data-state="carry"] .rabbit-carry{
-  opacity:1;
-}
-
-.rabbit .held{
-  object-fit:contain;
-  position:absolute;
-  left:42%;
-  top:56%;
-  width:23%;
-  height:16%;
-  overflow:visible;
-  opacity:0;
-  filter:drop-shadow(0 2px 2px #47221d33);
-}
-
-.approaching:not(.victory) .rabbit-visual{
-  animation:walkBob .28s ease-in-out infinite;
-}
-
-.rabbit[data-state="happy"] .rabbit-visual{
-  animation:celebrate .65s ease-in-out 1;
-}
-
+.rabbit[data-state="carry"] .rabbit-carry{opacity:1}
+.rabbit .held{object-fit:contain;position:absolute;left:42%;top:56%;width:23%;height:16%;overflow:visible;opacity:0;filter:drop-shadow(0 2px 2px #47221d33)}
+.approaching:not(.victory) .rabbit-visual{animation:walkBob .28s ease-in-out infinite}
+.rabbit[data-state="happy"] .rabbit-visual{animation:celebrate .65s ease-in-out 1}
 .resetting .rabbit{transition:none!important}
 
 /* Сундук */
-.chest{
-  position:absolute;
-  left:45%;
-  top:24%;
-  width:35%;
-  aspect-ratio:4/3;
-  perspective:1000px;
-  z-index:4;
-}
-
-.chest-layer{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-  object-fit:contain;
-  pointer-events:none;
-  user-select:none;
-}
-
+.chest{position:absolute;left:45%;top:24%;width:35%;aspect-ratio:4/3;perspective:1000px;z-index:4}
+.chest-layer{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;pointer-events:none;user-select:none}
 .chest-back{z-index:1}
 .chest-front{z-index:5}
-
-.lid{
-  z-index:4;
-  transform-origin:50% 43%;
-  opacity:1;
-  transition:opacity .5s ease,transform .75s ease;
-  will-change:transform,opacity;
-}
-
-.lid-open{
-  z-index:2;
-  opacity:0;
-  transform:translateY(-4%) scaleY(.86);
-  transform-origin:50% 37%;
-  transition:opacity .65s ease,transform .8s ease;
-  pointer-events:none;
-}
-
-.opened .lid{
-  opacity:0;
-  transform:translateY(-4%);
-  pointer-events:none;
-}
-
-.opened .lid-open{
-  opacity:1;
-  transform:translateY(-13.5%) scaleY(1);
-}
-
-.resetting .lid,
-.resetting .lid-open{
-  transition:none!important;
-}
-
-/* Окошки кода без номеров */
-.code{
-  position:absolute;
-  left:17%;
-  right:17%;
-  top:59%;
-  height:23%;
-  display:flex;
-  gap:4px;
-  padding:5px;
-  background:#6d422bd9;
-  border:2px solid #edc775;
-  border-radius:11px;
-  z-index:7;
-}
-
-.slot{
-  position:relative;
-  min-width:0;
-  flex:1;
-  height:100%;
-  padding:0;
-  background:#fff8dc;
-  border:2px solid #e7c995;
-  border-radius:7px;
-  color:#4f3b2e;
-  font-weight:900;
-  font-size:clamp(20px,3vw,36px);
-  box-shadow:0 2px 0 #402b2040;
-}
-
-.slot.active{
-  outline:3px solid #39bcb2;
-  outline-offset:1px;
-  background:white;
-}
-
+.lid{z-index:4;transform-origin:50% 43%;opacity:1;transition:opacity .5s ease,transform .75s ease;will-change:transform,opacity}
+.lid-open{z-index:2;opacity:0;transform:translateY(-4%) scaleY(.86);transform-origin:50% 37%;transition:opacity .65s ease,transform .8s ease;pointer-events:none}
+.opened .lid{opacity:0;transform:translateY(-4%);pointer-events:none}
+.opened .lid-open{opacity:1;transform:translateY(-13.5%) scaleY(1)}
+.resetting .lid,.resetting .lid-open{transition:none!important}
+.code{position:absolute;left:17%;right:17%;top:59%;height:23%;display:flex;gap:4px;padding:5px;background:#6d422bd9;border:2px solid #edc775;border-radius:11px;z-index:7}
+.slot{position:relative;min-width:0;flex:1;height:100%;padding:0;background:#fff8dc;border:2px solid #e7c995;border-radius:7px;color:#4f3b2e;font-weight:900;font-size:clamp(20px,3vw,36px);box-shadow:0 2px 0 #402b2040}
+.slot.active{outline:3px solid #39bcb2;outline-offset:1px;background:white}
 .slot.wrong{background:#ffe0db;border-color:#b74b51}
 .slot.correct{background:#e1f4d9;border-color:#4f8b55}
 .slot:disabled{opacity:1}
 
-/* Подарок в сундуке */
-.treasure{
-  position:absolute;
-  left:34%;
-  width:32%;
-  top:27%;
-  height:38%;
-  opacity:0;
-  z-index:3;
-  transform:translateY(12%);
-  transition:opacity .5s,transform .8s;
-  pointer-events:none;
-}
-
-.gift-image{
-  display:block;
-  object-fit:contain;
-  width:100%;
-  height:100%;
-  filter:drop-shadow(0 3px 3px #47221d33);
-}
-
-.shine{
-  position:absolute;
-  left:14%;
-  top:12%;
-  width:72%;
-  height:58%;
-  border-radius:50%;
-  background:radial-gradient(ellipse,#fff1b8e6,#fff0a000 70%);
-  opacity:0;
-  transition:opacity .8s;
-  z-index:2;
-  pointer-events:none;
-}
-
+.treasure{position:absolute;left:34%;width:32%;top:27%;height:38%;opacity:0;z-index:3;transform:translateY(12%);transition:opacity .5s,transform .8s;pointer-events:none}
+.gift-image{display:block;object-fit:contain;width:100%;height:100%;filter:drop-shadow(0 3px 3px #47221d33)}
+.shine{position:absolute;left:14%;top:12%;width:72%;height:58%;border-radius:50%;background:radial-gradient(ellipse,#fff1b8e6,#fff0a000 70%);opacity:0;transition:opacity .8s;z-index:2;pointer-events:none}
 .opened .treasure{opacity:1;transform:translateY(-35%)}
 .opened .shine{opacity:1}
 .carrying .treasure{opacity:0}
 .carrying .held{opacity:1}
-
 .approaching .rabbit{left:36%}
 .returning .rabbit{left:24%}
 .scene.shake .chest{animation:shake .5s}
+.confetti{position:absolute;inset:0;pointer-events:none;z-index:9}
+.confetti i{position:absolute;top:-12px;width:9px;height:15px;border-radius:3px;animation:fall 2.6s ease-in both;left:var(--x);background:var(--color);animation-delay:var(--delay)}
 
-/* Квадратные плашки с примерами */
-.tasks{
-  position:absolute;
-  left:50%;
-  transform:translateX(-50%);
-  bottom:4%;
-  width:72%;
-  max-width:720px;
-  display:grid;
-  grid-template-columns:repeat(5,minmax(0,1fr));
-  gap:clamp(8px,1.7vw,22px);
-  gap:clamp(8px,1.7cqw,22px);
-  margin:0;
-  z-index:10;
-}
-
-.task{
-  position:relative;
-  display:block;
-  aspect-ratio:1/1;
-  width:100%;
-  min-width:0;
-  padding:0;
-  border:0;
-  border-radius:12px;
-  background:transparent;
-  isolation:isolate;
-  box-shadow:none;
-  -webkit-backdrop-filter:none;
-  backdrop-filter:none;
-}
-
-.task-bg{
-  position:absolute;
-  inset:0;
-  display:block;
-  width:100%;
-  height:100%;
-  object-fit:contain;
-  pointer-events:none;
-  user-select:none;
-  z-index:0;
-  filter:drop-shadow(0 3px 3px #62432124);
-}
-
-.task-content{
-  position:absolute;
-  inset:17% 14%;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:4px;
-  min-width:0;
-  z-index:1;
-  pointer-events:none;
-}
-
-.task .equation{
-  display:block;
-  line-height:1.05;
-  font-size:clamp(16px,2.4vw,34px);
-  font-weight:bold;
-  white-space:nowrap;
-  letter-spacing:-.6px;
-  word-spacing:-.08em;
-  color:#31434a;
-  transform:scaleX(var(--equation-scale,1));
-  transform-origin:center;
-}
-
-.task::after{
-  content:"";
-  position:absolute;
-  inset:7%;
-  border:2px solid transparent;
-  border-radius:12%;
-  pointer-events:none;
-  z-index:2;
-}
-
-.task.active::after{
-  border-color:#228f83;
-  box-shadow:inset 0 0 0 1px #ffffffa8,0 0 9px #31a99e66;
-}
-
-.task:hover:enabled .task-bg{
-  filter:drop-shadow(0 4px 5px #62432138) brightness(1.03);
-}
-
-.task.wrong::after{
-  border-color:#bd4c4c;
-  box-shadow:0 0 9px #bd4c4c66;
-}
-
+/* Плашки с примерами */
+.tasks{position:absolute;left:50%;transform:translateX(-50%);bottom:4%;width:72%;max-width:720px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:clamp(8px,1.7vw,22px);gap:clamp(8px,1.7cqw,22px);margin:0;z-index:10}
+.task{position:relative;display:block;aspect-ratio:1/1;width:100%;min-width:0;padding:0;border:0;border-radius:12px;background:transparent;isolation:isolate;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}
+.task-bg{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:contain;pointer-events:none;user-select:none;z-index:0;filter:drop-shadow(0 3px 3px #62432124)}
+.task-content{position:absolute;inset:17% 14%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-width:0;z-index:1;pointer-events:none}
+.task .equation{display:block;line-height:1.05;font-size:clamp(16px,2.4vw,34px);font-weight:bold;white-space:nowrap;letter-spacing:-.6px;word-spacing:-.08em;color:#31434a;transform:scaleX(var(--equation-scale,1));transform-origin:center}
+.task::after{content:"";position:absolute;inset:7%;border:2px solid transparent;border-radius:12%;pointer-events:none;z-index:2}
+.task.active::after{border-color:#228f83;box-shadow:inset 0 0 0 1px #ffffffa8,0 0 9px #31a99e66}
+.task:hover:enabled .task-bg{filter:drop-shadow(0 4px 5px #62432138) brightness(1.03)}
+.task.wrong::after{border-color:#bd4c4c;box-shadow:0 0 9px #bd4c4c66}
 .task.wrong .equation{color:#a93434}
-
-.task.correct::after{
-  border-color:#4c965c;
-  box-shadow:0 0 8px #4c965c44;
-}
-
+.task.correct::after{border-color:#4c965c;box-shadow:0 0 8px #4c965c44}
 .task.correct .equation{color:#287653}
 .task:disabled{opacity:1}
 
-/* Коллекция слева */
-.collection{
-  position:absolute;
-  top:20%;
-  left:2%;
-  bottom:22%;
-  width:8%;
-  max-width:96px;
-  padding:5px;
-  border:1px solid #fff9e6c9;
-  border-radius:16px;
-  background:linear-gradient(155deg,#fffdf2b8,#fff2d780);
-  box-shadow:0 8px 24px #3c675b26,inset 0 1px 0 #ffffffb3;
-  backdrop-filter:blur(12px);
-  -webkit-backdrop-filter:blur(12px);
-  z-index:10;
-}
-
-#level-bar{
-  display:flex;
-  flex-direction:column;
-  gap:4px;
-  height:100%;
-}
-
-.level-gift{
-  flex:1;
-  min-height:0;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:3px;
-  text-align:center;
-  border:1px solid #ffffffb3;
-  border-radius:9px;
-  background:#ffffff52;
-  padding:2px;
-  color:#587575;
-  font-size:clamp(7px,.8vw,10px);
-}
-
-.level-gift.current{
-  border:2px solid #288b80;
-  background:#fff9eac9;
-  color:#25434b;
-  font-weight:bold;
-  box-shadow:0 2px 8px #35685e12;
-}
-
-.level-gift.found{
-  border-color:#77a988;
-  background:#f3ffedb8;
-  color:#287653;
-}
-
-.level-gift img{
-  display:block;
-  object-fit:contain;
-  width:80%;
-  height:62%;
-  max-width:80%;
-  min-height:0;
-  flex-shrink:1;
-  filter:drop-shadow(0 2px 2px #785a2426);
-}
-
-.level-gift .mystery{
-  display:grid;
-  place-items:center;
-  min-height:0;
-  height:62%;
-  font-size:clamp(16px,2.5vw,35px);
-  font-weight:bold;
-  color:#71958a;
-}
-
+/* Коллекция подарков */
+.collection{position:absolute;top:20%;left:2%;bottom:22%;width:8%;max-width:96px;padding:5px;border:1px solid #fff9e6c9;border-radius:16px;background:linear-gradient(155deg,#fffdf2b8,#fff2d780);box-shadow:0 8px 24px #3c675b26,inset 0 1px 0 #ffffffb3;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);z-index:10}
+#level-bar{display:flex;flex-direction:column;gap:4px;height:100%}
+.level-gift{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-align:center;border:1px solid #ffffffb3;border-radius:9px;background:#ffffff52;padding:2px;color:#587575;font-size:clamp(7px,.8vw,10px)}
+.level-gift.current{border:2px solid #288b80;background:#fff9eac9;color:#25434b;font-weight:bold;box-shadow:0 2px 8px #35685e12}
+.level-gift.found{border-color:#77a988;background:#f3ffedb8;color:#287653}
+.level-gift img{display:block;object-fit:contain;width:80%;height:62%;max-width:80%;min-height:0;flex-shrink:1;filter:drop-shadow(0 2px 2px #785a2426)}
+.level-gift .mystery{display:grid;place-items:center;min-height:0;height:62%;font-size:clamp(16px,2.5vw,35px);font-weight:bold;color:#71958a}
 .level-gift>span:last-child{white-space:nowrap}
 
-/* Цифры справа на фоне */
-.panel{
-  position:absolute;
-  right:1.8%;
-  top:17%;
-  bottom:16%;
-  width:5.8%;
-  max-width:68px;
-  background:linear-gradient(155deg,#fffdf2c9,#fff2d799);
-  border:1px solid #fff9e6cc;
-  border-radius:16px;
-  padding:6px;
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-  z-index:10;
-  box-shadow:0 5px 18px #3c675b1c;
-  backdrop-filter:blur(12px);
-  -webkit-backdrop-filter:blur(12px);
-}
-
-.keypad{
-  flex:1;
-  min-height:0;
-  display:grid;
-  grid-template-columns:1fr;
-  grid-template-rows:repeat(10,minmax(0,1fr));
-  gap:3px;
-}
-
-.key{
-  font-size:23px;
-  font-weight:bold;
-  border:1px solid #dcd7c8;
-  background:#fff;
-  border-radius:8px;
-  height:100%;
-  min-height:0;
-  line-height:1;
-  width:100%;
-  padding:0;
-  box-shadow:0 2px 0 #e4dcc9;
-}
-
-.key:hover:enabled{background:#f0faf7}
-.key:active:enabled{transform:translateY(1px);box-shadow:none}
+/* Новая деревянная панель с цифрами */
+.panel{position:absolute;right:1.8%;top:17%;bottom:16%;width:7.4%;max-width:92px;border:0;border-radius:14px;overflow:hidden;isolation:isolate;z-index:10;background:linear-gradient(90deg,#a86428,#fff3d8 18%,#fff3d8 82%,#a86428)}
+/* Убираем прозрачные поля исходной картинки средствами CSS. */
+.keypad-bg{position:absolute;left:-46.84%;top:-1.83%;width:193.25%;height:104.54%;max-width:none;object-fit:fill;pointer-events:none;user-select:none;z-index:0}
+.panel-content{position:absolute;inset:8% 17%;display:flex;flex-direction:column;gap:6px;z-index:1}
+.keypad{flex:1;min-height:0;display:grid;grid-template-columns:1fr;grid-template-rows:repeat(10,minmax(0,1fr));gap:3px}
+.key{font-size:23px;font-weight:bold;color:#604324;border:1px solid #c99a49;background:linear-gradient(#fffdf3,#fae7bd);border-radius:7px;height:100%;min-height:0;line-height:1;width:100%;padding:0;box-shadow:inset 0 1px 0 #fff,0 1px 0 #b78238;transition:background .15s,color .15s,transform .15s}
+.key:hover:enabled{background:linear-gradient(#edfffb,#bdebe3);border-color:#349c91;color:#16665e}
+.key:active:enabled{transform:translateY(1px);box-shadow:inset 0 1px 3px #79542333}
 .key:disabled{opacity:.45}
-
-.rail-actions{
-  flex-shrink:0;
-  height:18%;
-  min-height:0;
-  display:grid;
-  grid-template-rows:repeat(2,minmax(0,1fr));
-  gap:4px;
-  padding-top:5px;
-  border-top:1px solid #e6ddc9;
-}
-
+.rail-actions{flex-shrink:0;height:18%;min-height:0;display:grid;grid-template-rows:repeat(2,minmax(0,1fr));gap:4px;padding-top:4px;border-top:1px solid #c99a4966}
 .key.delete{font-size:22px}
-
-.open{
-  display:grid;
-  place-items:center;
-  width:100%;
-  height:100%;
-  min-height:0;
-  border:0;
-  background:var(--teal);
-  color:white;
-  border-radius:9px;
-  padding:2px;
-  box-shadow:0 3px 0 #10635d;
-}
-
-.open svg{
-  display:block;
-  width:26px;
-  height:26px;
-  pointer-events:none;
-}
-
+.open{display:grid;place-items:center;width:100%;height:100%;min-height:0;border:1px solid #d7ac57;background:linear-gradient(#299e94,#16746e);color:#fff3c9;border-radius:7px;padding:1px;box-shadow:inset 0 1px 0 #ffffff80,0 1px 0 #946a2d}
+.open svg{display:block;width:26px;height:26px;pointer-events:none}
 .open:hover:enabled{background:#126d66}
-
-.open:disabled{
-  background:#d9e3dc;
-  color:#81948a;
-  box-shadow:0 2px 0 #c9d5cd;
-}
-
+.open:disabled{background:#d9e3dc;color:#81948a;box-shadow:0 2px 0 #c9d5cd}
 .open.waiting svg{animation:waiting 1s ease-in-out infinite}
 
 /* Сообщения */
-.status{
-  position:absolute;
-  left:13%;
-  right:10%;
-  bottom:.2%;
-  font-size:13px;
-  line-height:1.35;
-  min-height:18px;
-  margin:0;
-  text-align:center;
-  color:var(--ink);
-  text-shadow:0 1px 3px #ffffff,0 0 8px #ffffff;
-  z-index:12;
-}
-
+.status{position:absolute;left:13%;right:10%;bottom:.2%;font-size:13px;line-height:1.35;min-height:18px;margin:0;text-align:center;color:var(--ink);text-shadow:0 1px 3px #ffffff,0 0 8px #ffffff;z-index:12}
 .status.error{color:var(--bad)}
 .status.success{color:var(--good);font-weight:bold}
-
-.asset-warning{
-  position:absolute;
-  bottom:1%;
-  left:12%;
-  right:9%;
-  z-index:40;
-  margin:0;
-  max-height:30%;
-  overflow:auto;
-  padding:8px;
-  border:1px solid #dfb3a8;
-  border-radius:12px;
-  background:#fff1e8;
-  color:#8c392b;
-  font-size:13px;
-  line-height:1.5;
-  overflow-wrap:anywhere;
-}
-
-/* Конфетти */
-.confetti{
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-  z-index:9;
-}
-
-.confetti i{
-  position:absolute;
-  top:-12px;
-  width:9px;
-  height:15px;
-  border-radius:3px;
-  animation:fall 2.6s ease-in both;
-  left:var(--x);
-  background:var(--color);
-  animation-delay:var(--delay);
-}
+.badge{font-size:10px;color:var(--ink);background:#fffdf0b3;border:1px solid #ffffffb3;border-radius:20px;padding:4px 8px;white-space:nowrap}
+.asset-warning{position:absolute;bottom:1%;left:12%;right:9%;z-index:40;margin:0;max-height:30%;overflow:auto;padding:8px;border:1px solid #dfb3a8;border-radius:12px;background:#fff1e8;color:#8c392b;font-size:13px;line-height:1.5;overflow-wrap:anywhere}
 
 /* Анимации */
 @keyframes waiting{50%{opacity:.35}}
@@ -754,7 +142,7 @@ summary:focus-visible{
 @keyframes celebrate{50%{transform:translateY(-14px)}}
 @keyframes fall{to{transform:translateY(500px) rotate(650deg);opacity:0}}
 
-/* Средние окна */
+/* Небольшие экраны */
 @media(max-width:850px){
   .quiet{font-size:12px;padding:7px 9px}
   .top{left:12%;right:9%}
@@ -762,7 +150,7 @@ summary:focus-visible{
   .level-info{gap:4px}
   .badge{font-size:9px;padding:3px 5px}
   .subtitle{font-size:12px}
-  .panel{padding:4px;gap:4px}
+  .panel-content{gap:4px}
   .key{font-size:22px}
   .speech{font-size:12px;padding:7px}
   .code{gap:2px;padding:3px}
@@ -775,23 +163,17 @@ summary:focus-visible{
   .level-gift{gap:1px;font-size:8px}
   .status{font-size:11px}
 }
-
-/* Узкие окна */
 @media(max-width:620px){
   body{padding:5px}
-
-  .app{
-    width:min(100%,calc((100vh - 10px)*16/9));
-    width:min(100%,calc((100svh - 10px)*16/9));
-  }
-
+  .app{width:min(100%,calc((100vh - 10px)*16/9));width:min(100%,calc((100svh - 10px)*16/9))}
   .top{left:4%;right:4%}
   .quiet{padding:6px 8px;font-size:11px}
   .header-actions{gap:4px}
   .level-info{gap:3px}
   .subtitle{font-size:10px}
   .badge{font-size:8px;padding:2px 4px}
-  .panel{padding:3px;border-radius:12px}
+  .panel{border-radius:12px}
+  .panel-content{gap:3px}
   .keypad{gap:2px}
   .key{font-size:19px}
   .rail-actions{gap:3px;padding-top:3px}
@@ -811,97 +193,52 @@ summary:focus-visible{
   .help-content{font-size:12px}
   .status{font-size:10px}
 }
-
-/* Портретное окно */
+/* Вертикальное окно */
 @media(max-aspect-ratio:4/5){
-  .app{
-    width:min(100%,calc((100vh - 16px)*3/4));
-    width:min(100%,calc((100svh - 16px)*3/4));
-  }
-
+  .app{width:min(100%,calc((100vh - 16px)*3/4));width:min(100%,calc((100svh - 16px)*3/4))}
   .scene{aspect-ratio:3/4}
-
-  .top{
-    left:4%;
-    right:4%;
-    align-items:flex-start;
-    flex-wrap:wrap;
-  }
-
+  .top{left:4%;right:4%;align-items:flex-start;flex-wrap:wrap}
   .header-actions{margin-left:auto}
   .speech{left:16%;top:14%;width:68%}
   .rabbit{left:18%;width:32%;bottom:33%}
   .approaching .rabbit{left:30%}
   .returning .rabbit{left:18%}
   .chest{left:43%;top:36%;width:42%}
-
-  .collection{
-    left:2%;
-    top:22%;
-    bottom:28%;
-    width:10%;
-    max-width:none;
-  }
-
-  .panel{
-    right:2%;
-    top:22%;
-    bottom:22%;
-    width:9%;
-    max-width:none;
-  }
-
+  .collection{left:2%;top:22%;bottom:28%;width:10%;max-width:none}
+  .panel{right:2%;top:20%;bottom:24%;width:11%;max-width:none}
+  .panel-content{inset:6% 17%}
+  .key{line-height:.9}
   .tasks{width:76%;bottom:12%}
   .status{left:13%;right:13%;bottom:3%;font-size:11px}
   .help-content{max-height:45svh}
 }
-
-/* Невысокие окна */
+/* Низкое горизонтальное окно */
 @media(max-height:440px) and (min-aspect-ratio:4/5){
-  .panel{
-    width:9%;
-    max-width:none;
-    top:18%;
-    bottom:18%;
-  }
-
-  .keypad{
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    grid-template-rows:repeat(5,minmax(0,1fr));
-  }
-
+  .panel{width:12%;max-width:none;top:18%;bottom:18%}
+  .keypad{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(5,minmax(0,1fr))}
   .rail-actions{height:24%}
   .collection{top:22%;bottom:22%}
   .badge{display:none}
   .status{font-size:10px}
   .help-content{max-height:50svh}
 }
-
 @media(prefers-reduced-motion:reduce){
-  *,*::before,*::after{
-    animation:none!important;
-    transition:none!important;
-  }
-
+  *,*::before,*::after{animation:none!important;transition:none!important}
   .confetti{display:none}
 }
 </style>
 </head>
-
 <body>
 <main class="app" aria-label="Математическая игра">
   <section class="scene" id="scene" aria-label="Остров с сундуком">
-
     <header class="top">
       <div class="level-info">
         <p class="subtitle">Уровень 1 из 5</p>
         <span class="badge">Найдено подарков: 0 из 5</span>
       </div>
-
       <div class="header-actions">
         <details class="help" id="help">
           <summary class="quiet">Как играть</summary>
-
           <div class="help-content">
             <p>Пройди пять уровней и собери пять подарков. На каждом уровне реши пять примеров: каждый ответ — одна цифра кода.</p>
             <p>Выбери пример или окошко сундука и нажми нужную цифру справа. Когда все пять цифр готовы, нажми кнопку с замочком справа. Красные окошки подскажут, какие ответы нужно исправить.</p>
@@ -909,18 +246,13 @@ summary:focus-visible{
             <p>Клавиатура: цифры — ответ; ← и → — выбор окошка; Backspace или Delete — стереть. Закрыть подсказку: повторное нажатие, щелчок снаружи или Escape.</p>
           </div>
         </details>
-
-        <button class="quiet" id="new-game" type="button">
-          Начать заново ↻
-        </button>
+        <button class="quiet" id="new-game" type="button">Начать заново ↻</button>
       </div>
     </header>
 
     <img class="scene-bg" src="images/island.png" alt="" data-asset draggable="false">
 
-    <div class="speech" id="speech">
-      Поможешь мне открыть сундук?
-    </div>
+    <div class="speech" id="speech">Поможешь мне открыть сундук?</div>
 
     <div class="rabbit" id="rabbit" data-state="idle" aria-hidden="true">
       <div class="rabbit-visual">
@@ -929,31 +261,23 @@ summary:focus-visible{
         <img class="rabbit-frame rabbit-ears" src="images/rabbit/ears.png" alt="" data-asset draggable="false">
         <img class="rabbit-frame rabbit-happy" src="images/rabbit/happy.png" alt="" data-asset draggable="false">
         <img class="rabbit-frame rabbit-carry" src="images/rabbit/carry.png" alt="" data-asset draggable="false">
-
         <img class="held" id="gift-in-paws" src="images/gifts/carrot.png" alt="" data-asset draggable="false">
       </div>
     </div>
 
     <div class="chest">
       <img class="chest-layer chest-back" src="images/chest/back.png" alt="" data-asset draggable="false">
-
       <img class="chest-layer lid-open" src="images/chest/lid-open.png" alt="" data-asset draggable="false">
-
       <div class="shine"></div>
-
       <div class="treasure" aria-hidden="true">
         <img class="gift-image" id="gift-in-chest" src="images/gifts/carrot.png" alt="" data-asset draggable="false">
       </div>
-
       <img class="chest-layer lid" src="images/chest/lid.png" alt="" data-asset draggable="false">
-
       <img class="chest-layer chest-front" src="images/chest/front.png" alt="" data-asset draggable="false">
-
       <div class="code" id="code" role="group" aria-label="Пять цифр кода"></div>
     </div>
 
     <div class="confetti" id="confetti" aria-hidden="true"></div>
-
     <div class="tasks" id="tasks" role="group" aria-label="Пять примеров"></div>
 
     <aside class="collection" aria-label="Коллекция подарков">
@@ -961,33 +285,23 @@ summary:focus-visible{
     </aside>
 
     <aside class="panel" aria-label="Цифры для ответа">
-      <div class="keypad" id="keypad" role="group" aria-label="Цифры от нуля до девяти"></div>
-
-      <div class="rail-actions">
-        <button
-          class="key delete"
-          id="erase"
-          type="button"
-          aria-label="Стереть выбранную цифру"
-          title="Стереть выбранную цифру"
-        >⌫</button>
-
-        <button
-          class="open"
-          id="check"
-          type="button"
-          aria-label="Открыть сундук"
-          title="Открыть сундук"
-          disabled
-        ></button>
+      <img class="keypad-bg" src="images/keypad-panel.png" alt="" data-asset draggable="false">
+      <div class="panel-content">
+        <div class="keypad" id="keypad" role="group" aria-label="Цифры от нуля до девяти"></div>
+        <div class="rail-actions">
+          <button class="key delete" id="erase" type="button"
+            aria-label="Стереть выбранную цифру"
+            title="Стереть выбранную цифру">⌫</button>
+          <button class="open" id="check" type="button"
+            aria-label="Открыть сундук"
+            title="Открыть сундук" disabled></button>
+        </div>
       </div>
     </aside>
 
     <p class="status" id="status" role="status" aria-live="polite" aria-atomic="true"></p>
     <p id="asset-warning" class="asset-warning" role="status" hidden></p>
-
   </section>
-
   <noscript>Для игры включите JavaScript в браузере.</noscript>
 </main>
 
@@ -995,17 +309,13 @@ summary:focus-visible{
 'use strict';
 
 const $ = id => document.getElementById(id);
-
 const scene = $('scene');
 const code = $('code');
 const tasks = $('tasks');
 const keypad = $('keypad');
-const rabbit = $('rabbit');
-const levelBar = $('level-bar');
-
 const giftInChest = $('gift-in-chest');
 const giftInPaws = $('gift-in-paws');
-
+const rabbit = $('rabbit');
 const TASK_PANEL = 'images/task-panel.png';
 
 function setRabbitState(state) {
@@ -1013,69 +323,35 @@ function setRabbitState(state) {
 }
 
 const icon = body => `
-  <svg
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    stroke-width="2.1"
-    stroke-linecap="round"
-    stroke-linejoin="round"
-    aria-hidden="true"
-  >${body}</svg>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    stroke-width="2.1" stroke-linecap="round"
+    stroke-linejoin="round" aria-hidden="true">${body}</svg>
 `;
 
 const ICONS = {
-  lock: icon(
-    '<rect x="5" y="10" width="14" height="11" rx="3"/>' +
-    '<path d="M8 10V7a4 4 0 0 1 8 0v3"/>' +
-    '<path d="M12 14v3"/>'
-  ),
-
-  wait: icon(
-    '<path d="M7 3h10M7 21h10M8 3v5l8 8v5M16 3v5l-8 8v5"/>'
-  ),
-
-  next: icon(
-    '<path d="M4 12h16M13 5l7 7-7 7"/>'
-  ),
-
-  restart: icon(
-    '<path d="M20 11a8 8 0 1 1-2.4-5.7M20 3v6h-6"/>'
-  )
+  lock: icon('<rect x="5" y="10" width="14" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/><path d="M12 14v3"/>'),
+  wait: icon('<path d="M7 3h10M7 21h10M8 3v5l8 8v5M16 3v5l-8 8v5"/>'),
+  next: icon('<path d="M4 12h16M13 5l7 7-7 7"/>'),
+  restart: icon('<path d="M20 11a8 8 0 1 1-2.4-5.7M20 3v6h-6"/>')
 };
 
 function setActionIcon(kind, label) {
   const button = $('check');
-
   button.innerHTML = ICONS[kind];
   button.setAttribute('aria-label', label);
   button.setAttribute('title', label);
   button.setAttribute('data-action', kind);
 }
 
-// Пять уровней — пять подарков.
 const gifts = [
-  {
-    name: 'Золотая морковка',
-    image: 'images/gifts/carrot.png'
-  },
-  {
-    name: 'Голубой алмаз',
-    image: 'images/gifts/diamond.png'
-  },
-  {
-    name: 'Королевская корона',
-    image: 'images/gifts/crown.png'
-  },
-  {
-    name: 'Волшебная жемчужина',
-    image: 'images/gifts/pearl.png'
-  },
-  {
-    name: 'Кубок юного пирата',
-    image: 'images/gifts/cup.png'
-  }
+  { name: 'Золотая морковка', image: 'images/gifts/carrot.png' },
+  { name: 'Голубой алмаз', image: 'images/gifts/diamond.png' },
+  { name: 'Королевская корона', image: 'images/gifts/crown.png' },
+  { name: 'Волшебная жемчужина', image: 'images/gifts/pearl.png' },
+  { name: 'Кубок юного пирата', image: 'images/gifts/cup.png' }
 ];
+
+const levelBar = $('level-bar');
 
 let level = 0;
 let examples = [];
@@ -1094,42 +370,28 @@ function makeExamples() {
   for (let a = 0; a <= 10; a++) {
     for (let b = 1; b <= 9; b++) {
       if (a + b <= 9) {
-        pool.push({
-          a,
-          b,
-          sign: '+',
-          result: a + b
-        });
+        pool.push({ a, b, sign: '+', result: a + b });
       }
-
       if (a >= b && a - b <= 9) {
-        pool.push({
-          a,
-          b,
-          sign: '−',
-          result: a - b
-        });
+        pool.push({ a, b, sign: '−', result: a - b });
       }
     }
   }
 
   const take = sign => {
     const indices = pool
-      .map((x, i) => x.sign === sign ? i : -1)
-      .filter(i => i >= 0);
+      .map((example, index) => example.sign === sign ? index : -1)
+      .filter(index => index >= 0);
 
     return pool.splice(
-      indices[randomInt(0, indices.length - 1)],
-      1
+      indices[randomInt(0, indices.length - 1)], 1
     )[0];
   };
 
   const set = [take('+'), take('−')];
 
   while (set.length < 5) {
-    set.push(
-      pool.splice(randomInt(0, pool.length - 1), 1)[0]
-    );
+    set.push(pool.splice(randomInt(0, pool.length - 1), 1)[0]);
   }
 
   for (let i = set.length - 1; i > 0; i--) {
@@ -1157,11 +419,9 @@ function renderCollection() {
 
   gifts.forEach((gift, index) => {
     const found =
-      index < level ||
-      (index === level && phase === 'won');
+      index < level || (index === level && phase === 'won');
 
     const item = document.createElement('div');
-
     item.className = 'level-gift' +
       (found ? ' found' : index === level ? ' current' : '');
 
@@ -1178,28 +438,21 @@ function renderCollection() {
 
     if (found) {
       const image = document.createElement('img');
-
       image.setAttribute('src', gift.image);
       image.setAttribute('alt', '');
       image.setAttribute('draggable', 'false');
-
       watchAsset(image);
       item.append(image);
     } else {
       const mystery = document.createElement('span');
-
       mystery.className = 'mystery';
       mystery.setAttribute('aria-hidden', 'true');
       mystery.textContent = '?';
-
       item.append(mystery);
     }
 
     const label = document.createElement('span');
-
-    label.textContent =
-      `Уровень ${index + 1}${found ? ' ✓' : ''}`;
-
+    label.textContent = `Уровень ${index + 1}${found ? ' ✓' : ''}`;
     item.append(label);
     levelBar.append(item);
   });
@@ -1215,7 +468,6 @@ function startLevel() {
   phase = 'playing';
   checked = false;
 
-  // Сбрасываем анимации и закрываем сундук.
   scene.className = 'scene resetting';
   void scene.offsetWidth;
   scene.classList.remove('resetting');
@@ -1244,29 +496,18 @@ function startLevel() {
 
   examples.forEach((example, index) => {
     const slot = document.createElement('button');
-
     slot.type = 'button';
     slot.className = 'slot';
-
-    // Только значение — без номера под окошком.
     slot.innerHTML = '<span class="value">·</span>';
-
     slot.addEventListener('click', () => select(index));
     code.append(slot);
 
     const task = document.createElement('button');
-
     task.type = 'button';
     task.className = 'task';
 
-    // На плашке находится только пример.
     task.innerHTML = `
-      <img
-        class="task-bg"
-        src="${TASK_PANEL}"
-        alt=""
-        draggable="false"
-      >
+      <img class="task-bg" src="${TASK_PANEL}" alt="" draggable="false">
       <span class="task-content">
         <span class="equation">${equation(example)}</span>
       </span>
@@ -1290,8 +531,6 @@ function startLevel() {
   }
 }
 
-// Вписываем строку в светлую часть плашки,
-// сохраняя высоту цифр.
 function fitTaskText() {
   for (const task of tasks.children) {
     const content = task.querySelector('.task-content');
@@ -1334,22 +573,18 @@ function render() {
 
     const filled = answers[i] !== null;
     const active = playing && selected === i;
-
-    const correct =
-      checked && filled && answers[i] === example.result;
-
-    const wrong =
-      checked && filled && answers[i] !== example.result;
+    const correct = checked && filled && answers[i] === example.result;
+    const wrong = checked && filled && answers[i] !== example.result;
 
     slot.querySelector('.value').textContent =
       filled ? answers[i] : '·';
 
-    for (const el of [slot, task]) {
-      el.classList.toggle('active', active);
-      el.classList.toggle('correct', correct);
-      el.classList.toggle('wrong', wrong);
-      el.setAttribute('aria-pressed', String(active));
-      el.disabled = !playing;
+    for (const element of [slot, task]) {
+      element.classList.toggle('active', active);
+      element.classList.toggle('correct', correct);
+      element.classList.toggle('wrong', wrong);
+      element.setAttribute('aria-pressed', String(active));
+      element.disabled = !playing;
     }
 
     task.classList.toggle('filled', filled);
@@ -1363,23 +598,20 @@ function render() {
   });
 
   const button = $('check');
-
   button.classList.toggle('waiting', phase === 'opening');
 
   if (playing) {
     setActionIcon('lock', 'Открыть сундук');
-    button.disabled = answers.some(x => x === null);
+    button.disabled = answers.some(value => value === null);
   } else if (phase === 'opening') {
     setActionIcon('wait', 'Кролик забирает подарок');
     button.disabled = true;
   } else {
     const final = level === gifts.length - 1;
-
     setActionIcon(
       final ? 'restart' : 'next',
       final ? 'Играть сначала' : 'Следующий уровень'
     );
-
     button.disabled = false;
   }
 
@@ -1404,14 +636,12 @@ function enterDigit(digit) {
   const next = Array.from(
     { length: 5 },
     (_, offset) => (selected + offset + 1) % 5
-  ).find(i => answers[i] === null);
+  ).find(index => answers[index] === null);
 
-  if (next !== undefined) {
-    selected = next;
-  }
+  if (next !== undefined) selected = next;
 
   setStatus(
-    answers.every(x => x !== null)
+    answers.every(value => value !== null)
       ? 'Код готов! Нажми на замочек справа.'
       : 'Продолжай! Реши следующий пример.'
   );
@@ -1432,14 +662,16 @@ function eraseDigit() {
 function checkCode() {
   if (
     phase !== 'playing' ||
-    answers.some(x => x === null)
+    answers.some(value => value === null)
   ) return;
 
   checked = true;
 
   const wrong = examples
-    .map((ex, i) => answers[i] !== ex.result ? i : -1)
-    .filter(i => i >= 0);
+    .map((example, index) =>
+      answers[index] !== example.result ? index : -1
+    )
+    .filter(index => index >= 0);
 
   if (wrong.length) {
     selected = wrong[0];
@@ -1455,21 +687,18 @@ function checkCode() {
     scene.classList.remove('shake');
     void scene.offsetWidth;
     scene.classList.add('shake');
-
     render();
     return;
   }
 
   phase = 'opening';
-
   scene.classList.remove('shake');
   scene.classList.add('opened');
 
   $('new-game').disabled = true;
   setRabbitState('happy');
 
-  $('speech').textContent =
-    `Ура! ${gifts[level].name}!`;
+  $('speech').textContent = `Ура! ${gifts[level].name}!`;
 
   setStatus(
     `Сундук открыт! Внутри — ${gifts[level].name.toLowerCase()}.`,
@@ -1486,15 +715,10 @@ function checkCode() {
   later(() => {
     setRabbitState('carry');
     scene.classList.add('carrying');
-
-    $('speech').textContent =
-      'Забираю подарок в коллекцию!';
+    $('speech').textContent = 'Забираю подарок в коллекцию!';
   }, 2350);
 
-  later(() => {
-    scene.classList.add('returning');
-  }, 2900);
-
+  later(() => scene.classList.add('returning'), 2900);
   later(finishLevel, 4200);
 }
 
@@ -1511,12 +735,13 @@ function finishLevel() {
   setStatus(
     final
       ? 'Победа! Все 5 уровней пройдены. Посмотри на нашу коллекцию подарков!'
-      : `Уровень ${level + 1} пройден! Найден подарок: ${gifts[level].name.toLowerCase()}.`,
+      : `Уровень ${level + 1} пройден! Найден подарок: ${
+          gifts[level].name.toLowerCase()
+        }.`,
     'success'
   );
 
   $('new-game').disabled = false;
-
   $('new-game').textContent = final
     ? 'Пройти ещё раз ↻'
     : 'Начать заново ↻';
@@ -1529,28 +754,16 @@ function finishLevel() {
 
   for (let i = 0; i < 35; i++) {
     const particle = document.createElement('i');
-
-    particle.style.setProperty(
-      '--x',
-      `${randomInt(5, 95)}%`
-    );
-
-    particle.style.setProperty(
-      '--delay',
-      `${Math.random() * .8}s`
-    );
-
+    particle.style.setProperty('--x', `${randomInt(5, 95)}%`);
+    particle.style.setProperty('--delay', `${Math.random() * .8}s`);
     particle.style.setProperty(
       '--color',
       ['#edb848', '#e78975', '#65b5ac', '#fff1bd'][i % 4]
     );
-
     $('confetti').append(particle);
   }
 
-  later(() => {
-    $('confetti').replaceChildren();
-  }, 4000);
+  later(() => $('confetti').replaceChildren(), 4000);
 }
 
 function primaryAction() {
@@ -1570,17 +783,13 @@ function primaryAction() {
   startLevel();
 }
 
-// Создаём кнопки цифр.
 for (const value of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]) {
   const key = document.createElement('button');
-
   key.type = 'button';
   key.className = 'key';
   key.textContent = value;
-
   key.setAttribute('aria-label', `Ввести ${value}`);
   key.addEventListener('click', () => enterDigit(value));
-
   keypad.append(key);
 }
 
@@ -1588,7 +797,6 @@ $('erase').addEventListener('click', eraseDigit);
 $('check').addEventListener('click', primaryAction);
 $('new-game').addEventListener('click', restartGame);
 
-// Управление клавиатурой.
 document.addEventListener('keydown', event => {
   if ($('help').open) {
     if (event.key === 'Escape') {
@@ -1596,7 +804,6 @@ document.addEventListener('keydown', event => {
       $('help').open = false;
       $('help').querySelector('summary').focus();
     }
-
     return;
   }
 
@@ -1617,10 +824,7 @@ document.addEventListener('keydown', event => {
   if (/^[0-9]$/.test(event.key)) {
     event.preventDefault();
     enterDigit(Number(event.key));
-  } else if (
-    event.key === 'Backspace' ||
-    event.key === 'Delete'
-  ) {
+  } else if (event.key === 'Backspace' || event.key === 'Delete') {
     event.preventDefault();
     eraseDigit();
   } else if (
@@ -1628,37 +832,28 @@ document.addEventListener('keydown', event => {
     event.key === 'ArrowRight'
   ) {
     event.preventDefault();
-
-    select(
-      (selected + (event.key === 'ArrowRight' ? 1 : 4)) % 5
-    );
+    select((selected + (event.key === 'ArrowRight' ? 1 : 4)) % 5);
   }
 });
 
-// Закрываем правила щелчком снаружи.
 document.addEventListener('click', event => {
   const help = $('help');
-
   if (help.open && !help.contains(event.target)) {
     help.open = false;
   }
 });
 
-// Проверяем загрузку картинок.
+/* Проверяем картинки */
 const missingAssets = new Set();
 
 function watchAsset(img) {
   function updateAssetState(ok) {
     const path = img.getAttribute('src');
 
-    if (ok) {
-      missingAssets.delete(path);
-    } else {
-      missingAssets.add(path);
-    }
+    if (ok) missingAssets.delete(path);
+    else missingAssets.add(path);
 
     const warning = $('asset-warning');
-
     warning.hidden = missingAssets.size === 0;
 
     warning.textContent = missingAssets.size
@@ -1668,13 +863,8 @@ function watchAsset(img) {
       : '';
   }
 
-  img.addEventListener('load', () => {
-    updateAssetState(true);
-  });
-
-  img.addEventListener('error', () => {
-    updateAssetState(false);
-  });
+  img.addEventListener('load', () => updateAssetState(true));
+  img.addEventListener('error', () => updateAssetState(false));
 
   if (img.complete) {
     updateAssetState(img.naturalWidth > 0);
@@ -1685,31 +875,23 @@ for (const img of document.querySelectorAll('img[data-asset]')) {
   watchAsset(img);
 }
 
-// Предварительно загружаем подарки.
+/* Заранее загружаем подарки */
 const giftPreloads = gifts.map(gift => {
   const image = document.createElement('img');
-
   image.setAttribute('src', gift.image);
   watchAsset(image);
-
   return image;
 });
 
-// Предварительно загружаем плашку.
 const panelPreload = document.createElement('img');
-
 panelPreload.setAttribute('src', TASK_PANEL);
 watchAsset(panelPreload);
 
-// Вписываем примеры после изменения размера окна.
-const taskResizeObserver =
-  typeof ResizeObserver === 'function'
-    ? new ResizeObserver(fitTaskText)
-    : null;
+const taskResizeObserver = typeof ResizeObserver === 'function'
+  ? new ResizeObserver(fitTaskText)
+  : null;
 
-if (taskResizeObserver) {
-  taskResizeObserver.observe(tasks);
-}
+if (taskResizeObserver) taskResizeObserver.observe(tasks);
 
 if (document.fonts && document.fonts.ready) {
   document.fonts.ready.then(fitTaskText);
